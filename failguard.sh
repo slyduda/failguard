@@ -33,8 +33,9 @@ read -s -p "Enter password : " password
 # Get db config info
 read -p "Enter database name : " db_name
 read -s -p "Create a postgres (superuser) password : " postgres_password
-read -s -p "Create a replication user password : " replication_password
+read -s -p "Create a replication user password : " REPLICATION_PASSWORD
 
+PRIVATE_IP_BUILD=$(curl -w "\n" http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address)
 
 read -p "Enter the manager private IP : " MANAGER_IP
 read -p "Enter the manager name : " MANAGER_NAME
@@ -51,6 +52,7 @@ CIPHER_PASSWORD=$(openssl rand -base64 48)
 # SSH to Manager Server
 configure_server $username $password
 configure_cluster_config $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME 
+# Exit
 
 # SSH to Primary Server
 configure_server $username $password
@@ -58,23 +60,30 @@ configure_database_server $db_name $postgres_password
 configure_cluster_config $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME 
 configure_primary_postgresql $CLUSTER_NAME
 create_primary_keys
+# Exit
 
 # SSH to Backup Server
 configure_server $username $password
 configure_cluster_config $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME 
 create_backup_keys
+# Exit
 
 # SSH to Primary Server
 create_primary_backup_config $CLUSTER_NAME $CIPHER_PASSWORD $BACKUP_NAME
-
+# Exit
 
 # SSH to Standby Server
 configure_server $username $password
 configure_database_server $db_name $postgres_password
 configure_cluster_config $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME 
+configure_backup_server $PRIVATE_IP_BUILD $BACKUP_NAME
+create_standby_streaming_config $CLUSTER_NAME
+# Exit
 
 # SSH to Backup Server
-create_backup_standby_config $CLUSTER_NAME
+create_backup_standby_config $CLUSTER_NAME $PRIMARY_NAME $REPLICATION_PASSWORD
+# Exit
 
 # SSH to Primary Server
 create_primary_standby_config $CLUSTER_NAME $REPLICATION_PASSWORD $STANDBY_IP
+# Exit
