@@ -72,6 +72,7 @@ create_primary_keys()
 # -------------------------- #
 copy_primary_key_to_backup()
 {
+    HOST=$1
     # Copy repository public key to pg-primary
     (echo -n 'no-agent-forwarding,no-X11-forwarding,no-port-forwarding,' && \
         echo -n 'command="/usr/bin/pgbackrest ${SSH_ORIGINAL_COMMAND#* }" ' && \
@@ -87,8 +88,6 @@ copy_primary_key_to_backup()
     else
         echo "Connection to $HOST was successful."
 }
-
-copy_primary_key_to_backup db-backup
 
 # -------------------------- #
 #  - Backup Cluster Repo --  #

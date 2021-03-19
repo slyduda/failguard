@@ -3,11 +3,10 @@
 #   Standby Cluster Setup -  #
 # -------------------------- #
 
-# Install postgres
-configure_backup_server() 
+configure_standby_server() 
 {
        BUILD_HOST=$1
-       BACKUP_HOST=$2
+
 
        sudo scp $BUILD_HOST:/build/pgbackrest-release-2.32/src/pgbackrest /usr/bin
        sudo chmod 755 /usr/bin/pgbackrest
@@ -24,21 +23,25 @@ configure_backup_server()
        # Create pg-standby host key pair
        sudo -u postgres mkdir -m 750 -p /var/lib/postgresql/.ssh
        sudo -u postgres ssh-keygen -f /var/lib/postgresql/.ssh/id_rsa -t rsa -b 4096 -N ""
+}
 
+copy_standby_key()
+{
+       HOST=$1
        # Copy pg-standby public key to pg-backup
        (echo -n 'no-agent-forwarding,no-X11-forwarding,no-port-forwarding,' && \
               echo -n 'command="/usr/bin/pgbackrest ${SSH_ORIGINAL_COMMAND#* }" ' && \
-              sudo ssh root@$BACKUP_HOST cat /home/pgbackrest/.ssh/id_rsa.pub) | \
+              sudo ssh root@$HOST cat /home/pgbackrest/.ssh/id_rsa.pub) | \
               sudo -u postgres tee -a /var/lib/postgresql/.ssh/authorized_keys
 
 
        # Test connection from pg-backup to pg-primary
-       sudo -u pgbackrest ssh -q postgres@$BACKUP_HOST exit
+       sudo -u postgres  ssh -q pgbackrest@$HOST exit
        if [ $? -ne 0 ]; then
-              echo "Connection to $BACKUP_HOST failed."
+              echo "Connection to $HOST failed."
               exit
        else
-              echo "Connection to $BACKUP_HOST was successful."
+              echo "Connection to $HOST was successful."
 } 
 # -------------------------- #
 #  Standby Streaming Config  #
@@ -46,9 +49,10 @@ configure_backup_server()
 
 create_standby_streaming_config()
 {
-       CLUSTER_NAME=$1
-       PRIMARY_NAME=$2
-       REPLICATION_PASSWORD=$3
+       PRIMARY_NAME=$1
+       BACKUP_NAME=$2
+       CLUSTER_NAME=$3
+       REPLICATION_PASSWORD=$4
        > /etc/pgbackrest/pgbackrest.conf
        echo "[$CLUSTER_NAME]
        pg1-path=/var/lib/postgresql/12/main
@@ -56,7 +60,7 @@ create_standby_streaming_config()
 
        [global]
        log-level-file=detail
-       repo1-host=repository" >> /etc/pgbackrest/pgbackrest.conf
+       repo1-host=$BACKUP_NAME" >> /etc/pgbackrest/pgbackrest.conf
 
        # Configure the replication password in the .pgpass file.
        sudo -u postgres sh -c 'echo \

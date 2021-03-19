@@ -11,9 +11,7 @@ configure_cluster_config()
     STANDBY_NAME=$6
 
     # Add hard coded variables to file
-    echo "$PRIMARY_IP $PRIMARY_NAME
-    $BACKUP_IP $BACKUP_NAME
-    $STANDBY_IP $STANDBY_NAME" >> /etc/cloud/templates/hosts.debian.tmpl
+    echo "$PRIMARY_IP $PRIMARY_NAME # Set by Failguard
+    $BACKUP_IP $BACKUP_NAME # Set by Failguard
+    $STANDBY_IP $STANDBY_NAME # Set by Failguard" >> /etc/cloud/templates/hosts.debian.tmpl
 }
-
-configure_cluster_config $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME 

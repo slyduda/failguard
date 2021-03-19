@@ -43,7 +43,7 @@ create_backup_keys()
 #   HANG HERE@@@@@@@@@@@@@@  #
 # -------------------------- #
 
-copy_backup_key()
+copy_backup_keys()
 {
     HOST=$1
     # Copy pg-primary public key to pg-backup
@@ -61,8 +61,6 @@ copy_backup_key()
         echo "Connection to $HOST was successful."
 }
 
-copy_backup_key db-primary
-
 # -------------------------- #
 #  - Backup Cluster Repo --  #
 # -------------------------- #
@@ -70,7 +68,8 @@ copy_backup_key db-primary
 create_backup_config()
 {
     # Configure pg1-host/pg1-host-user and pg1-path
-    CLUSTER_NAME=$1
+    HOST=$1
+    CLUSTER_NAME=$2
     > /etc/pgbackrest/pgbackrest.conf
     echo "[$CLUSTER_NAME]
     pg1-host=pg-primary
@@ -82,37 +81,21 @@ create_backup_config()
     start-fast=y" >> /etc/pgbackrest/pgbackrest.conf
 
     # Test connection from pg-backup to pg-primary
-    sudo -u pgbackrest ssh postgres@pg-primary
+    sudo -u pgbackrest ssh postgres@$HOST
 }
 
-create_backup_config $CLUSTER_NAME
-# -------------------------- #
-#   HANG HERE@@@@@@@@@@@@@@  #
-# -------------------------- #
-
-copy_backup_key db-standby-6sdfm03fa
-
-
-# -------------------------- #
-#   HANG HERE@@@@@@@@@@@@@@  #
-# -------------------------- #
-
-# After standby is completely setup
-
-
-# -------------------------- #
-#  - Backup from Standby --  #
-# -------------------------- #
 
 create_backup_standby_config()
 {
-    CLUSTER_NAME=$1
+    PRIMARY_NAME=$1
+    STANDBY_NAME=$2
+    CLUSTER_NAME=$3
     # On the backup
     > /etc/pgbackrest/pgbackrest.conf
     echo "[$CLUSTER_NAME]
-    pg1-host=pg-primary
+    pg1-host=$PRIMARY_NAME
     pg1-path=/var/lib/postgresql/12/main
-    pg2-host=pg-standby-1
+    pg2-host=$STANDBY_NAME
     pg2-path=/var/lib/postgresql/12/main
 
     [global]
@@ -122,5 +105,3 @@ create_backup_standby_config()
     repo1-retention-full=2
     start-fast=y" >> /etc/pgbackrest/pgbackrest.conf
 }
-
-create_backup_standby_config $CLUSTER_NAME
