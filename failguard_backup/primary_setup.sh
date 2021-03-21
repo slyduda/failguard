@@ -1,7 +1,5 @@
 #!/bin/sh
 
-
-
 set_local_repository_primary_config()
 {
     CLUSTER_NAME=$1
@@ -40,41 +38,33 @@ set_archiving_primary_config()
 # Find a way to check response
 #sudo -u postgres pgbackrest --stanza=$clusterName --log-level-console=info check
 
-
-
-# -------------------------- #
-#  - Backup Cluster Repo --  #
-# -------------------------- #
-
-
 set_replica_streaming_primary_config()
 {
-    CLUSTER_NAME=$1
-    STANDBY_IP=$2
-    REPLICATION_PASSWORD=$3
+
+    STANDBY_IP=$1
+    REPLICATION_PASSWORD=$2
+    CLUSTER_NAME=$3
 
     #  Create replication user
     sudo -u postgres psql -c "create user replicator password '$REPLICATION_PASSWORD' replication";
 
     # Create pg_hba.conf entry for replication user
     sudo -u postgres sh -c 'echo "host    replication     replicator      $STANDBY_IP/32           md5" >> /etc/postgresql/12/demo/pg_hba.conf'
-
-    # Reload with new conf
-    sudo pg_ctlcluster 12 $CLUSTER_NAME reload
 }
 
 set_backup_standby_primary_config()
 {
     # Configure repo1-host/repo1-host-user
-    CLUSTER_NAME=$1
+    BACKUP_HOST=$1
     CIPHER_PASSWORD=$2
-    BACKUP_HOST=$3
+    CLUSTER_NAME=$3
+
     > /etc/pgbackrest/pgbackrest.conf
     echo "[$CLUSTER_NAME]
     pg1-path=/var/lib/postgresql/12/main
 
     [global]
-    repo1-host=pg-backup
+    repo1-host=$BACKUP_HOST
     repo1-cipher-pass=$CIPHER_PASSWORD
     repo1-cipher-type=aes-256-cbc
     repo1-path=/var/lib/pgbackrest
@@ -83,11 +73,6 @@ set_backup_standby_primary_config()
 
     [global:archive-push]
     compress-level=3" >> /etc/pgbackrest/pgbackrest.conf
-
-    # Test connection from pg-primary to pg-backup
-    sudo -u postgres ssh pgbackrest@$BACKUP_HOST
 }
-# -------------------------- #
-#   HANG HERE@@@@@@@@@@@@@@  #
-# -------------------------- #
+
 

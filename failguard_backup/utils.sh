@@ -4,6 +4,31 @@ restart_cluster(){
     sudo pg_ctlcluster 12 $CLUSTER_NAME restart # Specified cluster does not exist
 }
 
+stop_and_restore_cluster()
+{
+    CLUSTER_NAME=$1
+    sudo pg_ctlcluster 12 $CLUSTER_NAME stop
+    sudo -u postgres pgbackrest --stanza=$CLUSTER_NAME --delta --type=standby restore
+}
+
+start_cluster()
+{    
+    CLUSTER_NAME=$1
+    sudo pg_ctlcluster 12 $CLUSTER_NAME start
+}
+
+reload_cluser() {
+    CLUSTER_NAME=$1
+    sudo pg_ctlcluster 12 $CLUSTER_NAME reload
+}
+
+backup_cluster()
+{
+    # Can only be achieved from the backup (pgbackrest account)
+    CLUSTER_NAME=$1
+    sudo -u pgbackrest pgbackrest --stanza=$CLUSTER_NAME --log-level-console=detail backup
+}
+
 create_ssh_keys()
 {
     USER=$1

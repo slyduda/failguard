@@ -12,8 +12,9 @@ set_streaming_standby_config()
 {
        PRIMARY_NAME=$1
        BACKUP_NAME=$2
-       CLUSTER_NAME=$3
-       REPLICATION_PASSWORD=$4
+       REPLICATION_PASSWORD=$3
+       CLUSTER_NAME=$4
+       
        > /etc/pgbackrest/pgbackrest.conf
        echo "[$CLUSTER_NAME]
        pg1-path=/var/lib/postgresql/12/main

@@ -1,5 +1,6 @@
 #!/bin/sh
 source $(dirname "$0")/db_setup.sh
+source $(dirname "$0")/build_setup.sh
 source $(dirname "$0")/initial_setup.sh
 source $(dirname "$0")/private_setup.sh
 source $(dirname "$0")/failguard_backup/utils.sh
@@ -7,43 +8,60 @@ source $(dirname "$0")/failguard_backup/backup_setup.sh
 source $(dirname "$0")/failguard_backup/initial_setup.sh
 source $(dirname "$0")/failguard_backup/primary_setup.sh
 source $(dirname "$0")/failguard_backup/standby_setup.sh
+source $(dirname "$0")/failguard_backup/manager_setup.sh
 
-# Get the Private IP of the current machine (BUILD)
-BUILD_IP=$(curl -w "\n" http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address)
+# Get Generald Info
+read -p "Enter VPC ID : " VPC_ID
+read -p "Enter Region : " REGION
+read -p "Enter SSH Key ID : " KEY_ID
+read -p "Enter Bearer Token : " BEARER_TOKEN
+read -p "Enter your DB Name : " DB_NAME
+read -p "Enter your Cluster Name : " CLUSTER_NAME
+read -p "Enter your Domain : " DOMAIN
 
-# Ask for user info
-read -p "Enter username : " username
-read -s -p "Enter password : " password
+# Host credentials
+read -p "Enter a username : " USERNAME
+read -s -p "Enter password : " PASSWORD
+printf '\n'
 
-# Get db config info
-read -p "Enter database name : " db_name
-read -s -p "Create a postgres (superuser) password : " postgres_password
+# Postgres Superuser credentials
+read -s -p "Create a postgres (superuser) password : " POSTGRES_PASSWORD
+printf '\n'
+
+# Postgres Replication credentials
 read -s -p "Create a replication user password : " REPLICATION_PASSWORD
+printf '\n'
 
-# Get the IP and name info for all servers
-# This will be automated and stored in the management DB later
-read -p "Enter the manager private IP : " MANAGER_IP
-read -p "Enter the manager name : " MANAGER_NAME
-read -p "Enter the primary private IP : " PRIMARY_IP
-read -p "Enter the primary name : " PRIMARY_NAME
-read -p "Enter the backup private IP : " BACKUP_IP
-read -p "Enter the backup name : " BACKUP_NAME
-read -p "Enter the standby private IP : " STANDBY_IP
-read -p "Enter the standby name : " STANDBY_NAME
-
-# Create Cluster Config Info
-# Add more config here later
-read -p "Enter the cluster name : " CLUSTER_NAME
+# Generate a cipher password
 CIPHER_PASSWORD=$(openssl rand -base64 48)
+
+# EMPTY VARIABLES
+MANAGER_IP=''
+PRIMARY_IP=''
+STANDBY_IP=''
+BACKUP_IP=''
+BUILD_IP=''
+
+MANAGER_NAME=''
+PRIMARY_NAME=''
+BACKUP_NAME=''
+STANDBY_NAME=''
+BUILD_NAME=''
+
+build_setup()
+{
+    build_droplets
+    build_pgbackrest
+}
 
 manager_setup()
 {
     # SSH to Manager Server
-    configure_server $username $password
+    configure_server $USERNAME $PASSWORD
     create_cluster_hosts $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME
+    
     # Exit
 }
-
 
 primary_setup()
 {
@@ -51,14 +69,14 @@ primary_setup()
     
     # Initial Config
     configure_private_droplet
-    configure_server $username $password
+    configure_server $USERNAME $PASSWORD
     
     # Create Hosts and Keys
     create_cluster_hosts $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME 
     create_ssh_keys postgres
     
     # Install postgres and pgbackrest
-    install_postgres $db_name $postgres_password
+    install_postgres $DB_NAME $POSTGRES_PASSWORD
     install_pgbackrest $BUILD_IP
 
     # Create pgbackrest config
@@ -79,7 +97,7 @@ backup_setup()
 
     # Initial Config
     configure_private_droplet
-    configure_server $username $password
+    configure_server $USERNAME $PASSWORD
     
     # Create Hosts and Keys
     create_cluster_hosts $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME 
@@ -107,23 +125,24 @@ standby_setup()
 
     # Initial Config
     configure_private_droplet
-    configure_server $username $password
+    configure_server $USERNAME $PASSWORD
 
     # Create Hosts and Keys
     create_cluster_hosts $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME
     create_ssh_keys postgres
 
     # Install postgres and pgbackrest
-    install_postgres $db_name $postgres_password
+    install_postgres $DB_NAME $POSTGRES_PASSWORD
     install_pgbackrest $BUILD_IP
 
     # Create pgbackrest config
     create_pgbackrest_config postgres
     create_pgbackrest_repository postgres
-    set_streaming_standby_config $PRIMARY_NAME $BACKUP_NAME $CLUSTER_NAME $REPLICATION_PASSWORD
+    set_streaming_standby_config $PRIMARY_NAME $BACKUP_NAME $REPLICATION_PASSWORD $CLUSTER_NAME
     
     # Share Standby Key with Backup 
     send_postgres_public_key $BACKUP_NAME
+    
     # Exit
 }
 
@@ -148,14 +167,24 @@ finish_primary_setup()
     send_postgres_public_key $BACKUP_NAME
     
     # Configure the Primary Server for Streaming and Standby Backup 
-    set_backup_standby_primary_config $CLUSTER_NAME $CIPHER_PASSWORD $BACKUP_NAME
-    set_replica_streaming_primary_config $CLUSTER_NAME $STANDBY_IP $REPLICATION_PASSWORD 
+    set_backup_standby_primary_config $BACKUP_NAME  $CIPHER_PASSWORD $CLUSTER_NAME 
+    set_replica_streaming_primary_config  $STANDBY_IP $REPLICATION_PASSWORD $CLUSTER_NAME
     # Exit
 }
 
+start_standby()
+{
+    start_cluster $CLUSTER_NAME
+}
 
+start_backup()
+{
+    backup_cluster $CLUSTER_NAME
+}
+
+build_setup
 # manager_setup
-primary_setup
+# primary_setup
 # backup_setup
 # primary_auth
 # standby_setup
