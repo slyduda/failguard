@@ -6,7 +6,8 @@
 configure_server()
 {
     # Update and upgrade all packages on the server
-    sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
+    sudo apt-get update -qq -y
+    sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade -qq -y
 
     USERNAME=$1
     PASSWORD=$2
@@ -20,7 +21,7 @@ configure_server()
                 exit 1
             else
                 pass=$(perl -e 'print crypt($ARGV[0], "password")' $PASSWORD)
-                useradd -m -p "$pass" "$USERNAME"
+                useradd -m -p "$pass" "$USERNAME" -s /bin/bash -d /home/$USERNAME
                 [ $? -eq 0 ] && echo "User has been added to system!" || echo "Failed to add a user!"
             fi
         else
@@ -40,7 +41,7 @@ configure_server()
     ufw enable
 
     # Allow the server to be accessible via password if one exists
-    sed -i 's/#PasswordAuthentication.*/PasswordAuthentication yes/g' /etc/ssh/sshd_config
-    sed -i 's/#PermitEmptyPasswords.*/PermitEmptyPasswords no/g' /etc/ssh/sshd_config
+    sed -i 's/.*PasswordAuthentication.*/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+    sed -i 's/.*PermitEmptyPasswords.*/PermitEmptyPasswords no/g' /etc/ssh/sshd_config
     service ssh restart
 }

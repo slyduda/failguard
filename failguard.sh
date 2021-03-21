@@ -1,7 +1,15 @@
 #!/bin/sh
+source $(dirname "$0")/db_setup.sh
+source $(dirname "$0")/initial_setup.sh
+source $(dirname "$0")/private_setup.sh
+source $(dirname "$0")/failguard_backup/utils.sh
+source $(dirname "$0")/failguard_backup/backup_setup.sh
+source $(dirname "$0")/failguard_backup/initial_setup.sh
+source $(dirname "$0")/failguard_backup/primary_setup.sh
+source $(dirname "$0")/failguard_backup/standby_setup.sh
 
 # Get the Private IP of the current machine (BUILD)
-PRIVATE_IP_BUILD=$(curl -w "\n" http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address)
+BUILD_IP=$(curl -w "\n" http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address)
 
 # Ask for user info
 read -p "Enter username : " username
@@ -32,7 +40,7 @@ manager_setup()
 {
     # SSH to Manager Server
     configure_server $username $password
-    configure_cluster_config $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME 
+    create_cluster_hosts $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME
     # Exit
 }
 
@@ -40,56 +48,116 @@ manager_setup()
 primary_setup()
 {
     # SSH to Primary Server
+    
+    # Initial Config
+    configure_private_droplet
     configure_server $username $password
-    configure_database_server $db_name $postgres_password
-    configure_cluster_config $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME 
-    configure_primary_postgresql $CLUSTER_NAME
-    create_primary_keys
+    
+    # Create Hosts and Keys
+    create_cluster_hosts $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME 
+    create_ssh_keys postgres
+    
+    # Install postgres and pgbackrest
+    install_postgres $db_name $postgres_password
+    install_pgbackrest $BUILD_IP
+
+    # Create pgbackrest config
+    create_pgbackrest_config postgres
+    create_pgbackrest_repository postgres
+    set_archiving_primary_config $CLUSTER_NAME
+
+
+    # create_pgbackrest_repository postgres # Only for local repository
+    # restart_cluster $CLUSTER_NAME
+    
     # Exit
 }
 
 backup_setup() 
 {
     # SSH to Backup Server
-    configure_server $username $password
-    configure_cluster_config $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME 
-    create_backup_config $PRIMARY_NAME $CLUSTER_NAME
-    create_backup_keys $PRIMARY_NAME
-    # Exit
-}
 
-primary_auth()
-{
-    # SSH to Primary Server
-    copy_primary_key_to_backup $BACKUP_NAME
-    create_primary_backup_config $CLUSTER_NAME $CIPHER_PASSWORD $BACKUP_NAME
+    # Initial Config
+    configure_private_droplet
+    configure_server $username $password
+    
+    # Create Hosts and Keys
+    create_cluster_hosts $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME 
+    create_ssh_keys postgres
+
+    # Install pgbackrest
+    install_pgbackrest $BUILD_IP
+
+    # Create pgbackrest config
+    create_pgbackrest_config pgbackrest
+    create_pgbackrest_repository pgbackrest
+    set_backup_config $PRIMARY_NAME $CLUSTER_NAME
+    
+    # Share Backup Key with Primary 
+    send_pgbackrest_public_key $STANDBY_NAME
+    
+    # restart_cluster $CLUSTER_NAME
+
     # Exit
 }
 
 standby_setup() 
 {
     # SSH to Standby Server
-    configure_server $username $password
-    configure_database_server $db_name $postgres_password
-    configure_cluster_config $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME 
 
-    configure_standby_server $PRIVATE_IP_BUILD
-    copy_standby_key $BACKUP_NAME
-    create_standby_streaming_config $PRIMARY_NAME $BACKUP_NAME $CLUSTER_NAME $REPLICATION_PASSWORD
+    # Initial Config
+    configure_private_droplet
+    configure_server $username $password
+
+    # Create Hosts and Keys
+    create_cluster_hosts $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME
+    create_ssh_keys postgres
+
+    # Install postgres and pgbackrest
+    install_postgres $db_name $postgres_password
+    install_pgbackrest $BUILD_IP
+
+    # Create pgbackrest config
+    create_pgbackrest_config postgres
+    create_pgbackrest_repository postgres
+    set_streaming_standby_config $PRIMARY_NAME $BACKUP_NAME $CLUSTER_NAME $REPLICATION_PASSWORD
+    
+    # Share Standby Key with Backup 
+    send_postgres_public_key $BACKUP_NAME
     # Exit
 }
 
-connect_backup_to_standby() 
+
+finish_backup_setup()
 {
     # SSH to Standby Server
-    create_backup_standby_config $PRIMARY_NAME $STANDBY_IP $CLUSTER_NAME
-    copy_backup_key $STANDBY_NAME
+
+    # Share Backup Key with Standby 
+    send_pgbackrest_public_key $STANDBY_NAME
+
+    # Configure the Backup Server for Standby Backup 
+    set_backup_standby_backup_config $PRIMARY_NAME $STANDBY_IP $CLUSTER_NAME
     # Exit
 }
 
-connect_primary_to_standby()
+finish_primary_setup()
 {
     # SSH to Primary Server
-    create_primary_standby_config $CLUSTER_NAME $STANDBY_IP $REPLICATION_PASSWORD 
+
+    # Share Primary Key with Backup
+    send_postgres_public_key $BACKUP_NAME
+    
+    # Configure the Primary Server for Streaming and Standby Backup 
+    set_backup_standby_primary_config $CLUSTER_NAME $CIPHER_PASSWORD $BACKUP_NAME
+    set_replica_streaming_primary_config $CLUSTER_NAME $STANDBY_IP $REPLICATION_PASSWORD 
     # Exit
 }
+
+
+# manager_setup
+primary_setup
+# backup_setup
+# primary_auth
+# standby_setup
+# finish_backup_setup
+# finish_primary_setup

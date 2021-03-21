@@ -59,6 +59,7 @@ Failguard is built to automatically provision and manage private PostgreSQL clus
 - [Configurations](#configurations)
 - [Custom Configurations](#custom-configurations)
 - [Contributing](#contributing)
+- [Maintainers](#maintainers)
 - [License](#license)
 
 ## Requirements
@@ -91,14 +92,14 @@ Droplet Name    | Host Name  | Description
 At a later point in time, this project will support instancing multiple standby servers along with, using additional clusters on the same backup server
 
 [(Back to top)](#table-of-contents)
-## Configuration
+## Configurations
 
 
 [(Back to top)](#table-of-contents)
-## Custom Configuration
+## Custom Configurations
 
 [(Back to top)](#table-of-contents)
-## Contributions
+## Contributing
 Your contributions are always welcome! Please have a look at the [contribution guidelines](CONTRIBUTING.md) first. :tada:
 
 [(Back to top)](#table-of-contents)
