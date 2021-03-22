@@ -53,6 +53,7 @@ send_pgbackrest_public_key()
         exit
     else
         echo "Connection to $HOST was successful."
+    fi
 }
 
 
@@ -73,4 +74,5 @@ send_postgres_public_key()
         exit
     else
         echo "Connection to $HOST was successful."
+    fi
 }

@@ -13,7 +13,7 @@ source $(dirname "$0")/failguard_backup/manager_setup.sh
 # Get Generald Info
 read -p "Enter VPC ID : " VPC_ID
 read -p "Enter Region : " REGION
-read -p "Enter SSH Key ID : " KEY_ID
+read -p "Enter SSH Key ID : " SSH_KEY_ID
 read -p "Enter Bearer Token : " BEARER_TOKEN
 read -p "Enter your DB Name : " DB_NAME
 read -p "Enter your Cluster Name : " CLUSTER_NAME
@@ -56,7 +56,8 @@ build_setup()
 
 manager_setup()
 {
-    # SSH to Manager Server
+    ssh -q -A -o "StrictHostKeyChecking no" root@${MANAGER_IP}
+    
     configure_server $USERNAME $PASSWORD
     create_cluster_hosts $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME
     
@@ -65,7 +66,7 @@ manager_setup()
 
 primary_setup()
 {
-    # SSH to Primary Server
+    ssh -q -A -o "StrictHostKeyChecking no" root@${PRIMARY_IP}
     
     # Initial Config
     configure_private_droplet
@@ -93,7 +94,7 @@ primary_setup()
 
 backup_setup() 
 {
-    # SSH to Backup Server
+    ssh -q -A -o "StrictHostKeyChecking no" root@${BACKUP_IP}
 
     # Initial Config
     configure_private_droplet
@@ -121,7 +122,7 @@ backup_setup()
 
 standby_setup() 
 {
-    # SSH to Standby Server
+    ssh -q -A -o "StrictHostKeyChecking no" root@${STANDBY_IP}
 
     # Initial Config
     configure_private_droplet
@@ -149,7 +150,7 @@ standby_setup()
 
 finish_backup_setup()
 {
-    # SSH to Standby Server
+    ssh -q -A -o "StrictHostKeyChecking no" root@${BACKUP_IP}
 
     # Share Backup Key with Standby 
     send_pgbackrest_public_key $STANDBY_NAME
@@ -161,7 +162,7 @@ finish_backup_setup()
 
 finish_primary_setup()
 {
-    # SSH to Primary Server
+    ssh -q -A -o "StrictHostKeyChecking no" root@${PRIMARY_IP}
 
     # Share Primary Key with Backup
     send_postgres_public_key $BACKUP_NAME
@@ -174,11 +175,13 @@ finish_primary_setup()
 
 start_standby()
 {
+    ssh -q -A -o "StrictHostKeyChecking no" root@${STANDBY_IP}
     start_cluster $CLUSTER_NAME
 }
 
 start_backup()
 {
+    ssh -q -A -o "StrictHostKeyChecking no" root@${BACKUP_IP}
     backup_cluster $CLUSTER_NAME
 }
 
