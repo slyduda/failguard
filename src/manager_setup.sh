@@ -1,9 +1,9 @@
 #!/bin/sh
-#source $(dirname "$0")/util/db_setup.sh
-#source $(dirname "$0")/util/initial_setup.sh
-#source $(dirname "$0")/util/private_setup.sh
+source $(dirname "$0")/util/db_setup.sh
+source $(dirname "$0")/util/initial_setup.sh
+source $(dirname "$0")/util/private_setup.sh
 
-#source $(dirname "$0")/main/manager_tooling.sh
+source $(dirname "$0")/main/manager_tooling.sh
 
 # Initial Config
 configure_private_droplet

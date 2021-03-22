@@ -2,7 +2,6 @@
 source $(dirname "$0")/main/failguard_utils.sh
 source $(dirname "$0")/main/primary_tooling.sh
 
-
 # Share Primary Key with Backup
 send_postgres_public_key $BACKUP_NAME
 
