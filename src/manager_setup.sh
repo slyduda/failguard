@@ -5,6 +5,8 @@ source $(dirname "$0")/util/private_setup.sh
 
 source $(dirname "$0")/main/manager_tooling.sh
 
+sudo apt-get install jq
+
 # Initial Config
 configure_private_droplet
 configure_server $USERNAME $PASSWORD

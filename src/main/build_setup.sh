@@ -14,6 +14,7 @@ build_pgbackrest() {
     # Update and upgrade all packages on the server
     sudo apt-get update -qq -y
     sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade -qq -y
+    sudo apt-get install jq
 }
 
 build_droplet()

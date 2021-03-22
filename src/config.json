@@ -1,0 +1,21 @@
+{
+    "cloud": "do",
+    "environment": {
+        "vpc": "60f2c49e-bc34-4d0c-a855-2381e55e6cf0",
+        "region": "sfo3",
+        "ssh_key": 99999999,
+        "api_key": "9s7djkxbckvjwbeufhwo298yf9hekj2l3hf8oagbdlifu287gweifg238r7ga"
+    },
+    "server": {
+        "cluster_name": "demo_cluster",
+        "domain": "gemify.tech",
+        "username": "test",
+        "password": "password"
+    },
+    "database": {
+        "name": "test",
+        "password": "password",
+        "management_password":  "password",
+        "replication_password": "password"
+    }
+}

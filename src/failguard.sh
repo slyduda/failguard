@@ -12,35 +12,49 @@ source $(dirname "$0")/main/primary_tooling.sh
 source $(dirname "$0")/main/standby_tooling.sh
 source $(dirname "$0")/main/manager_tooling.sh
 
+sudo apt-get install jq
 
 # Get Generald Info
-read -p "Enter VPC ID : " VPC_ID
-read -p "Enter Region : " REGION
-read -p "Enter SSH Key ID : " SSH_KEY_ID
-read -p "Enter Bearer Token : " BEARER_TOKEN
-read -p "Enter your DB Name : " DB_NAME
-read -p "Enter your Cluster Name : " CLUSTER_NAME
-read -p "Enter your Domain : " DOMAIN
+# read -p "Enter VPC ID : " VPC_ID
+# read -p "Enter Region : " REGION
+# read -p "Enter SSH Key ID : " SSH_KEY_ID
+# read -p "Enter Bearer Token : " BEARER_TOKEN
+# read -p "Enter your DB Name : " DB_NAME
+# read -p "Enter your Cluster Name : " CLUSTER_NAME
+# read -p "Enter your Domain : " DOMAIN
 
 # Host credentials
-read -p "Enter a username : " USERNAME
-read -s -p "Enter password : " PASSWORD
-printf '\n'
+# read -p "Enter a username : " USERNAME
+# read -s -p "Enter password : " PASSWORD
+# printf '\n'
 
 # Postgres Manager Surperuser credentials
-read -s -p "Create a postgres (superuser) password for your management db : " POSTGRES_MANAGER_PASSWORD
-printf '\n'
+# read -s -p "Create a postgres (superuser) password for your management db : " POSTGRES_MANAGER_PASSWORD
+# printf '\n'
 
 # Postgres Primary Superuser credentials
-read -s -p "Create a postgres (superuser) password for your primary db : " POSTGRES_PASSWORD
-printf '\n'
+# read -s -p "Create a postgres (superuser) password for your primary db : " POSTGRES_PASSWORD
+# printf '\n'
 
 # Postgres Replication credentials
-read -s -p "Create a replication user password : " REPLICATION_PASSWORD
-printf '\n'
+# read -s -p "Create a replication user password : " REPLICATION_PASSWORD
+# printf '\n'
 
-# Generate a cipher password
-CIPHER_PASSWORD=$(openssl rand -base64 48)
+FAILGAURD_CONFIG=$(cat $(dirname "$0")/prod.config.json)
+VPC_ID=$( $FAILGAURD_CONFIG | jq '.environment.vpc')
+REGION=$( $FAILGAURD_CONFIG | jq '.environment.region')
+SSH_KEY_ID=$( $FAILGAURD_CONFIG | jq '.environment.ssh_key')
+BEARER_TOKEN=$( $FAILGAURD_CONFIG | jq '.environment.api_key')
+
+CLUSTER_NAME=$( $FAILGAURD_CONFIG | jq '.server.cluster_name')
+DOMAIN=$( $FAILGAURD_CONFIG | jq '.server.domain')
+USERNAME=$( $FAILGAURD_CONFIG | jq '.server.username')
+PASSWORD=$( $FAILGAURD_CONFIG | jq '.server.password')
+
+DB_NAME=$( $FAILGAURD_CONFIG | jq '.database.name')
+POSTGRES_MANAGER_PASSWORD=$( $FAILGAURD_CONFIG | jq '.database.password')
+POSTGRES_PASSWORD=$( $FAILGAURD_CONFIG | jq '.database.management_password')
+REPLICATION_PASSWORD=$( $FAILGAURD_CONFIG | jq '.database.replication_password')
 
 # EMPTY VARIABLES
 MANAGER_IP=''
@@ -54,6 +68,23 @@ PRIMARY_NAME=''
 BACKUP_NAME=''
 STANDBY_NAME=''
 BUILD_NAME=''
+
+# Test Config Only
+# Comment out after testing
+MANAGER_IP=$( $FAILGAURD_CONFIG | jq '.server.instances.management.ip')
+PRIMARY_IP=$( $FAILGAURD_CONFIG | jq '.server.instances.primary.ip')
+STANDBY_IP=$( $FAILGAURD_CONFIG | jq '.server.instances.standby[0].ip')
+BACKUP_IP=$( $FAILGAURD_CONFIG | jq '.server.instances.backup.ip')
+BUILD_IP=$( $FAILGAURD_CONFIG | jq '.server.instances.build.ip')
+
+MANAGER_NAME=$( $FAILGAURD_CONFIG | jq '.server.instances.management.name')
+PRIMARY_NAME=$( $FAILGAURD_CONFIG | jq '.server.instances.primary.name')
+BACKUP_NAME=$( $FAILGAURD_CONFIG | jq '.server.instances.standby[0].name')
+STANDBY_NAME=$( $FAILGAURD_CONFIG | jq '.server.instances.backup.name')
+BUILD_NAME=$( $FAILGAURD_CONFIG | jq '.server.instances.build.name')
+
+# Generate a cipher password
+CIPHER_PASSWORD=$(openssl rand -base64 48)
 
 # Initial Build
 init_build()
