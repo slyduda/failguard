@@ -22,7 +22,6 @@ create_pgbackrest_config postgres
 create_pgbackrest_repository postgres
 set_archiving_primary_config $CLUSTER_NAME
 
-
 # create_pgbackrest_repository postgres # Only for local repository
 # restart_cluster $CLUSTER_NAME
 

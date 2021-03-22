@@ -9,8 +9,11 @@ source $(dirname "$0")/main/manager_tooling.sh
 configure_private_droplet
 configure_server $USERNAME $PASSWORD
 
-# Create Hosts
+# Create Hosts and Keys
 create_cluster_hosts $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME
+create_ssh_keys root
+fix_ssh_permission root
 
-# Install postgres
-install_postgres $DB_NAME $POSTGRES_PASSWORD
+# Install postgres and add tables
+install_postgres failguard $POSTGRES_PASSWORD
+create_manager_tables

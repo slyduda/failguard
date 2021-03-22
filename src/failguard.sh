@@ -29,7 +29,6 @@ printf '\n'
 # Postgres Manager Surperuser credentials
 read -s -p "Create a postgres (superuser) password for your management db : " POSTGRES_MANAGER_PASSWORD
 
-
 # Postgres Primary Superuser credentials
 read -s -p "Create a postgres (superuser) password for your primary db : " POSTGRES_PASSWORD
 printf '\n'
@@ -58,11 +57,12 @@ BUILD_NAME=''
 build_droplets
 build_pgbackrest
 
+
+# Begin Threading through servers
 echo "Manager Setup Started"
 ssh -q -A -o "StrictHostKeyChecking no" root@${MANAGER_IP} \
     "USERNAME=$USERNAME; 
-    PASSWORD=$PASSWORD; 
-    DB_NAME=$DB_NAME; 
+    PASSWORD=$PASSWORD;  
     POSTGRES_PASSWORD=$POSTGRES_MANAGER_PASSWORD; 
     PRIMARY_IP=$PRIMARY_IP;
     PRIMARY_NAME=$PRIMARY_NAME;
@@ -188,6 +188,19 @@ ssh -q -A -o "StrictHostKeyChecking no" root@${STANDBY_IP} \
 echo "Starting Backup"
 ssh -q -A -o "StrictHostKeyChecking no" root@${BACKUP_IP} \
     "CLUSTER_NAME=$CLUSTER_NAME; $(< backup_start.sh);"
+
+
+echo "Finalizing Manager"
+ssh -q -A -o "StrictHostKeyChecking no" root@${MANAGER_IP} \
+    "CLUSTER_NAME=$CLUSTER_NAME; 
+    PRIMARY_IP=$PRIMARY_IP;
+    PRIMARY_NAME=$PRIMARY_NAME;
+    BACKUP_IP=$BACKUP_IP;
+    BACKUP_NAME=$BACKUP_NAME;
+    STANDBY_IP=$STANDBY_IP;
+    STANDBY_NAME=$STANDBY_NAME;
+    MANAGER_IP=$MANAGER_IP;
+    MANAGER_NAME=$MANAGER_NAME; $(< manager_final.sh);"
 
 
 echo "$CLUSTER_NAME has been created!"
