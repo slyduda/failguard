@@ -74,6 +74,4 @@ destroy_build()
 {
     # Get the Private IP of the current machine (BUILD)
     BUILD_IP=$(curl -w "\n" http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address)
-
-
 }
