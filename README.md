@@ -44,13 +44,13 @@
 <div align="center">
   <sub>Building free and open source to empower all. Built with ❤︎ by
   <a href="https://twitter.com/slyduda">Sylvester Duda, Gemify LLC </a> and
-  <a href="https://github.com/failguard/failguard/graphs/contributors">
+  <a href="https://github.com/slyduda/failguard/graphs/contributors">
     contributors.
   </a>
 </div>
 
 # Introduction
-Failguard is built to automatically provision and manage private PostgreSQL clusters in Digital Ocean. This ensures that infrastructure meets best practices for handling production and volumes that could cause failures.
+Failguard is built to automatically provision and manage private PostgreSQL clusters in Digital Ocean (more coming soon). This project allows others to spend as little time doing configuration, to spend more time ensuring that infrastructure meets best practices for handling production and volumes that could cause failures.
 
 # Table of Contents
 - [Requirements](#requirements)
@@ -93,10 +93,22 @@ At a later point in time, this project will support instancing multiple standby 
 
 [(Back to top)](#table-of-contents)
 ## Configurations
+Currently, the only configuration that is enabled is the default with the following:
 
+- Replication Streaming Server
+- Dedicated Backup Server
+- Encrypted Backups
+- Dedicated Management Server
+- Management Console UI (Coming Soon)
+
+Later this package aims to allow:
+- Single Server Local Backups
+- Async Archiving
+- Hot Standby
 
 [(Back to top)](#table-of-contents)
 ## Custom Configurations
+Custom Configurations will come soon with the above information in mind.
 
 [(Back to top)](#table-of-contents)
 ## Contributing
@@ -104,15 +116,13 @@ Your contributions are always welcome! Please have a look at the [contribution g
 
 [(Back to top)](#table-of-contents)
 ## Goals
-In order to complete the package, I would like to complete the following:
-
-- Add a front end component
-- Add a backend component on pg-manager
-
-When complete, this package will be forked and renamed to pgFailguard.
+The following must be included before the first release:
+- Front-End Management Component
+- Better Backend for Routing and Handling PITR (Point In Time Recovery)
 
 [(Back to top)](#table-of-contents)
 ## Support
+
 
 [(Back to top)](#table-of-contents)
 ## Maintainer(s)
@@ -124,6 +134,6 @@ When complete, this package will be forked and renamed to pgFailguard.
 [(Back to top)](#table-of-contents)
 ## License
 
- GNU General Public License v3.0 2021 - [Sylvester](https://github.com/slyduda/). Please have a look at the [LICENSE.md](LICENSE.md) for more details.
+ GNU General Public License v3.0 2021 - [Sylvester](https://github.com/slyduda/) & [Gemify](https://github.com/gemifytech). Please have a look at the [LICENSE.md](LICENSE.md) for more details.
 
 [(Back to top)](#table-of-contents)
