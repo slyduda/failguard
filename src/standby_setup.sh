@@ -1,9 +1,10 @@
 #!/bin/sh
-source $(dirname "$0")/util/db_setup.sh
-source $(dirname "$0")/util/initial_setup.sh
-source $(dirname "$0")/util/private_setup.sh
-
-source $(dirname "$0")/main/standby_tooling.sh
+# source $(dirname "$0")/util/db_setup.sh
+# source $(dirname "$0")/util/initial_setup.sh
+# source $(dirname "$0")/util/private_setup.sh
+# 
+# source $(dirname "$0")/main/build_setup.sh
+# source $(dirname "$0")/main/standby_tooling.sh
 
 # Initial Config
 configure_private_droplet
@@ -20,7 +21,7 @@ install_pgbackrest $BUILD_IP
 # Create pgbackrest config
 create_pgbackrest_config postgres
 create_pgbackrest_repository postgres
-set_streaming_standby_config $PRIMARY_NAME $BACKUP_NAME $REPLICATION_PASSWORD $CLUSTER_NAME
+set_replica_streaming_standby_config $PRIMARY_NAME $BACKUP_NAME $REPLICATION_PASSWORD $CLUSTER_NAME
 
 # Share Standby Key with Backup 
 send_postgres_public_key $BACKUP_NAME

@@ -24,7 +24,7 @@ set_backup_config()
     start-fast=y" >> /etc/pgbackrest/pgbackrest.conf
 
     # Test connection from pg-backup to pg-primary
-    sudo -u pgbackrest ssh postgres@$PRIMARY_NAME
+    # sudo -u pgbackrest ssh postgres@$PRIMARY_NAME
 }
 
 set_backup_standby_backup_config()

@@ -13,7 +13,7 @@ insert_failguard_server()
     HOST_IP=$1
     HOST_NAME=$2
     HOST_TYPE=$3
-    sudo -u postgres psql -c "INSERT INTO table_name(ip, name, type) VALUES ($HOST_IP, $HOST_NAME, $HOST_TYPE);"    
+    sudo -u postgres psql -c "INSERT INTO servers(ip, name, type) VALUES ($HOST_IP, $HOST_NAME, $HOST_TYPE);"    
 }
 
 insert_failguard_cluster()

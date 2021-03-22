@@ -1,6 +1,6 @@
 #!/bin/sh
-source $(dirname "$0")/main/manager_tooling.sh
 source $(dirname "$0")/main/failguard_utils.sh
+source $(dirname "$0")/main/manager_tooling.sh
 
 # Insert all items that we should track
 insert_failguard_cluster $CLUSTER_NAME

@@ -8,7 +8,7 @@
 #  Standby Streaming Config  #
 # -------------------------- #
 
-set_streaming_standby_config()
+set_replica_streaming_standby_config()
 {
        PRIMARY_NAME=$1
        BACKUP_NAME=$2
