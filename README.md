@@ -74,8 +74,8 @@ Installation begins on a disposable Ubuntu server. Simple clone this repository 
 
 ```sh
 sudo git clone https://github.com/slyduda/failguard.git 
-sudo chmod +x ./failguard/failguard.sh
-./failguard/failguard.sh
+sudo chmod +x ./failguard/src/failguard.sh
+bash /failguard/src/failguard.sh
 ```
 
 [(Back to top)](#table-of-contents)
@@ -87,7 +87,7 @@ Droplet Name    | Host Name  | Description
 `[name]-db` | `pg-primary` | Primary DB instance that interacts with your apps.
 `[name]-standby-[id]` | `pg-standby-[id]` | Standby DB in case your main goes offline.
 `db-backup` | `pg-backup` | Dedicated server for storing encrypted backups.
-`db-manager` | `pg-manager` | Dedicated DB management server.
+`db-manager` | `pg-manager` | Dedicated DB management server with UI.
 
 At a later point in time, this project will support instancing multiple standby servers along with, using additional clusters on the same backup server
 
@@ -106,8 +106,6 @@ Your contributions are always welcome! Please have a look at the [contribution g
 ## Goals
 In order to complete the package, I would like to complete the following:
 
-- Test scripts
-- Pause process until other server is ready
 - Add a front end component
 - Add a backend component on pg-manager
 
