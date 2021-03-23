@@ -122,9 +122,12 @@ echo $CIPHER_PASSWORD
 # Initial Build
 init_build()
 {
-    build_pgbackrest
     build_droplets
     build_pgbackrest
+    # Install pgbackrest on each machine to keep 
+    install_pgbackrest $PRIMARY_IP
+    install_pgbackrest $STANDBY_IP
+    install_pgbackrest $BACKUP_IP
 }
 
 init_manager()

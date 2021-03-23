@@ -24,15 +24,14 @@ create_cluster_hosts()
 
 install_pgbackrest()
 {
-    BUILD_HOST=$1
-
-    sudo scp $BUILD_HOST:/build/pgbackrest-release-2.32/src/pgbackrest /usr/bin
-    sudo chmod 755 /usr/bin/pgbackrest
+    REMOTE_HOST=$1
+    scp -o "ForwardAgent yes" /build/pgbackrest-release-2.32/src/pgbackrest $REMOTE_HOST:/usr/bin
 }
 
 create_pgbackrest_config()
 {
     OWNER=$1
+    sudo chmod 755 /usr/bin/pgbackrest # Moved from the install_pgbackrest function
     # Create pgBackRest configuration file and directories
     sudo mkdir -p -m 770 /var/log/pgbackrest
     sudo chown $OWNER:$OWNER /var/log/pgbackrest
