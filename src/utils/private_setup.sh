@@ -21,11 +21,12 @@ configure_private_droplet()
     echo "What is the Private IP of your Gatewatay?"
     read privateGatewayIp
 
+    # IF MOVING THE FOLLOWING WATCH OUT FOR SPACING
     sed -i '/gateway4:/d' /etc/netplan/50-cloud-init.yaml
     sed -i '25,35 s|search: \[\]|search: \[\] \
-                routes: \
-                -   to: 0.0.0.0\/0  \
-                    via: '"$privateGatewayIp"'|gi' /etc/netplan/50-cloud-init.yaml
+            routes: \
+            -   to: 0.0.0.0\/0  \
+                via: '"$privateGatewayIp"'|gi' /etc/netplan/50-cloud-init.yaml
 
     netplan apply -debug
 

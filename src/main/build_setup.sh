@@ -9,12 +9,10 @@ build_pgbackrest() {
        liblz4-dev libzstd-dev libbz2-dev libz-dev
     cd /build/pgbackrest-release-2.32/src && ./configure && make
 
-    sudo apt-get install postgresql-client libxml2
-
     # Update and upgrade all packages on the server
     sudo apt-get update -qq -y
-    sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade -qq -y
-    sudo apt-get install jq
+    sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade -qq -y # Error here due to 
+    sudo apt-get install postgresql-client libxml2 install -y
 }
 
 build_droplet()

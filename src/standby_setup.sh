@@ -1,8 +1,10 @@
 #!/bin/sh
-source $(dirname "$0")/util/db_setup.sh
-source $(dirname "$0")/util/initial_setup.sh
-source $(dirname "$0")/util/private_setup.sh
+source $(dirname "$0")/utils/db_setup.sh
+source $(dirname "$0")/utils/initial_setup.sh
+source $(dirname "$0")/utils/private_setup.sh
 
+source $(dirname "$0")/main/initial_setup.sh
+source $(dirname "$0")/main/failguard_utils.sh 
 source $(dirname "$0")/main/build_setup.sh
 source $(dirname "$0")/main/standby_tooling.sh
 

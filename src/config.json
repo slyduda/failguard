@@ -16,6 +16,7 @@
         "name": "test",
         "password": "password",
         "management_password":  "password",
-        "replication_password": "password"
+        "replication_password": "password",
+        "cipher_password": "QqcB8nqBTnNQxPfcBbQNKe5sdqMMbl03vHpdpUWReDueBaDwZj9K9u8gCjelTney"
     }
 }
