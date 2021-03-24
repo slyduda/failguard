@@ -10,8 +10,6 @@ build_pgbackrest() {
     cd /build/pgbackrest-release-2.32/src && ./configure && make
 
     # Update and upgrade all packages on the server
-    sudo apt-get update -qq -y
-    sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade -qq -y # Error here due to 
     sudo apt-get install postgresql-client libxml2 install -y
 }
 

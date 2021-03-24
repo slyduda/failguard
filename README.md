@@ -84,8 +84,8 @@ Four servers are deployed from the disposable server that acts as a build server
 
 Droplet Name    | Host Name  | Description
 ------------ | ------------- | -------------
-`[name]-db` | `pg-primary` | Primary DB instance that interacts with your apps.
-`[name]-standby-[id]` | `pg-standby-[id]` | Standby DB in case your main goes offline.
+`db-[name]` | `pg-primary` | Primary DB instance that interacts with your apps.
+`db-[name]-[id]` | `pg-standby-[id]` | Standby DB in case your main goes offline.
 `db-backup` | `pg-backup` | Dedicated server for storing encrypted backups.
 `db-manager` | `pg-manager` | Dedicated DB management server with UI.
 
