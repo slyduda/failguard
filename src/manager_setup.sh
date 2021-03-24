@@ -16,7 +16,7 @@ sudo apt-get upgrade -qq -y
 
 # Initial Config
 configure_private_droplet $GATEWAY_IP
-configure_server $USERNAME $PASSWORD
+configure_server $USERNAME "$PASSWORD"
 
 # Create Hosts and Keys
 create_cluster_hosts $MANAGER_IP $MANAGER_NAME $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME

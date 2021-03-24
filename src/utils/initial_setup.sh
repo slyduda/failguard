@@ -6,7 +6,7 @@
 configure_server()
 {
     USERNAME=$1
-    PASSWORD=$2
+    PASSWORD="$2"
 
     add_a_user()
     {

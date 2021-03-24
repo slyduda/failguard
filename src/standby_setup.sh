@@ -17,7 +17,7 @@ sudo apt-get upgrade -qq -y
 
 # Initial Config
 configure_private_droplet $GATEWAY_IP
-configure_server $USERNAME $PASSWORD
+configure_server $USERNAME "$PASSWORD"
 
 # Install postgres and pgbackrest
 install_postgres $DB_NAME $POSTGRES_PASSWORD
