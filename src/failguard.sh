@@ -131,7 +131,7 @@ init_manager()
 {
     echo "Manager Setup Started"
     ssh -q -A -o "StrictHostKeyChecking no" root@${MANAGER_IP} \
-        "USERNAME=$USERNAME; PASSWORD=$PASSWORD; GATEWAY_IP=$GATEWAY_IP; PRIMARY_IP=$PRIMARY_IP; PRIMARY_NAME=$PRIMARY_NAME; BACKUP_IP=$BACKUP_IP; BACKUP_NAME=$BACKUP_NAME; STANDBY_IP=$STANDBY_IP; STANDBY_NAME=$STANDBY_NAME; MANAGER_IP=$MANAGER_IP; MANAGER_NAME=$MANAGER_NAME; POSTGRES_PASSWORD=$POSTGRES_MANAGER_PASSWORD; $(< utils/db_setup.sh); $(< utils/initial_setup.sh); $(< utils/private_setup.sh); $(< utils/do_patches.sh); $(< main/initial_setup.sh); $(< main/failguard_utils.sh); $(< main/manager_tooling.sh); $(< manager_setup.sh);"
+        "USERNAME=$USERNAME; PASSWORD=$PASSWORD; GATEWAY_IP=$GATEWAY_IP; PRIMARY_IP=$PRIMARY_IP; PRIMARY_NAME=$PRIMARY_NAME; BACKUP_IP=$BACKUP_IP; BACKUP_NAME=$BACKUP_NAME; STANDBY_IP=$STANDBY_IP; STANDBY_NAME=$STANDBY_NAME; MANAGER_IP=$MANAGER_IP; MANAGER_NAME=$MANAGER_NAME; POSTGRES_PASSWORD=$POSTGRES_MANAGER_PASSWORD; $(<utils/db_setup.sh); $(<utils/initial_setup.sh); $(<utils/private_setup.sh); $(<utils/do_patches.sh); $(<main/initial_setup.sh); $(<main/failguard_utils.sh); $(<main/manager_tooling.sh); $(<manager_setup.sh);"
     echo "Manager Setup Complete"
 }
 
@@ -139,7 +139,7 @@ init_primary()
 {
     echo "Primary Setup Started"
     ssh -q -A -o "StrictHostKeyChecking no" root@${PRIMARY_IP} \
-        "USERNAME=$USERNAME; PASSWORD=$PASSWORD; DB_NAME=$DB_NAME; POSTGRES_PASSWORD=$POSTGRES_PASSWORD; GATEWAY_IP=$GATEWAY_IP; MANAGER_IP=$MANAGER_IP; MANAGER_NAME=$MANAGER_NAME; PRIMARY_IP=$PRIMARY_IP; PRIMARY_NAME=$PRIMARY_NAME; BACKUP_IP=$BACKUP_IP; BACKUP_NAME=$BACKUP_NAME; STANDBY_IP=$STANDBY_IP; STANDBY_NAME=$STANDBY_NAME; CLUSTER_NAME=$CLUSTER_NAME; $(< utils/db_setup.sh); $(< utils/initial_setup.sh); $(< utils/private_setup.sh); $(< utils/do_patches.sh); $(< main/build_setup.sh);  $(< main/initial_setup.sh); $(< main/failguard_utils.sh); $(< main/primary_tooling.sh); $(< primary_setup.sh);"
+        "USERNAME=$USERNAME; PASSWORD=$PASSWORD; DB_NAME=$DB_NAME; POSTGRES_PASSWORD=$POSTGRES_PASSWORD; GATEWAY_IP=$GATEWAY_IP; MANAGER_IP=$MANAGER_IP; MANAGER_NAME=$MANAGER_NAME; PRIMARY_IP=$PRIMARY_IP; PRIMARY_NAME=$PRIMARY_NAME; BACKUP_IP=$BACKUP_IP; BACKUP_NAME=$BACKUP_NAME; STANDBY_IP=$STANDBY_IP; STANDBY_NAME=$STANDBY_NAME; CLUSTER_NAME=$CLUSTER_NAME; $(<utils/db_setup.sh); $(<utils/initial_setup.sh); $(<utils/private_setup.sh); $(<utils/do_patches.sh); $(<main/build_setup.sh);  $(<main/initial_setup.sh); $(<main/failguard_utils.sh); $(<main/primary_tooling.sh); $(<primary_setup.sh);"
     echo "Primary Setup Complete"
 }
 
@@ -147,7 +147,7 @@ init_backup()
 {
     echo "Backup Setup Started"
     ssh -q -A -o "StrictHostKeyChecking no" root@${BACKUP_IP} \
-        "USERNAME=$USERNAME; PASSWORD=$PASSWORD; GATEWAY_IP=$GATEWAY_IP; PRIMARY_IP=$PRIMARY_IP; PRIMARY_NAME=$PRIMARY_NAME; BACKUP_IP=$BACKUP_IP; BACKUP_NAME=$BACKUP_NAME; STANDBY_IP=$STANDBY_IP; STANDBY_NAME=$STANDBY_NAME; MANAGER_IP=$MANAGER_IP; MANAGER_NAME=$MANAGER_NAME; CLUSTER_NAME=$CLUSTER_NAME; $(< utils/db_setup.sh); $(< utils/initial_setup.sh); $(< utils/private_setup.sh); $(< utils/do_patches.sh); $(< main/build_setup.sh); $(< main/initial_setup.sh); $(< main/failguard_utils.sh); $(< main/backup_tooling.sh); $(< backup_setup.sh);"
+        "USERNAME=$USERNAME; PASSWORD=$PASSWORD; GATEWAY_IP=$GATEWAY_IP; PRIMARY_IP=$PRIMARY_IP; PRIMARY_NAME=$PRIMARY_NAME; BACKUP_IP=$BACKUP_IP; BACKUP_NAME=$BACKUP_NAME; STANDBY_IP=$STANDBY_IP; STANDBY_NAME=$STANDBY_NAME; MANAGER_IP=$MANAGER_IP; MANAGER_NAME=$MANAGER_NAME; CLUSTER_NAME=$CLUSTER_NAME; $(<utils/db_setup.sh); $(<utils/initial_setup.sh); $(<utils/private_setup.sh); $(<utils/do_patches.sh); $(<main/build_setup.sh); $(<main/initial_setup.sh); $(<main/failguard_utils.sh); $(<main/backup_tooling.sh); $(<backup_setup.sh);"
     echo "Backup Setup Complete"
 }
 
@@ -155,7 +155,7 @@ init_standby()
 {
     echo "Standby Setup Started"
     ssh -q -A -o "StrictHostKeyChecking no" root@${STANDBY_IP} \
-        "USERNAME=$USERNAME; PASSWORD=$PASSWORD; DB_NAME=$DB_NAME; POSTGRES_PASSWORD=$POSTGRES_PASSWORD; GATEWAY_IP=$GATEWAY_IP; PRIMARY_IP=$PRIMARY_IP; PRIMARY_NAME=$PRIMARY_NAME; BACKUP_IP=$BACKUP_IP; BACKUP_NAME=$BACKUP_NAME; STANDBY_IP=$STANDBY_IP; STANDBY_NAME=$STANDBY_NAME; MANAGER_IP=$MANAGER_IP; MANAGER_NAME=$MANAGER_NAME; CLUSTER_NAME=$CLUSTER_NAME; REPLICATION_PASSWORD=$REPLICATION_PASSWORD; $(< utils/db_setup.sh); $(< utils/initial_setup.sh); $(< utils/private_setup.sh); $(< utils/do_patches.sh); $(< main/build_setup.sh); $(< main/initial_setup.sh); $(< main/failguard_utils.sh); $(< main/standby_tooling.sh); $(< standby_setup.sh);"
+        "USERNAME=$USERNAME; PASSWORD=$PASSWORD; DB_NAME=$DB_NAME; POSTGRES_PASSWORD=$POSTGRES_PASSWORD; GATEWAY_IP=$GATEWAY_IP; PRIMARY_IP=$PRIMARY_IP; PRIMARY_NAME=$PRIMARY_NAME; BACKUP_IP=$BACKUP_IP; BACKUP_NAME=$BACKUP_NAME; STANDBY_IP=$STANDBY_IP; STANDBY_NAME=$STANDBY_NAME; MANAGER_IP=$MANAGER_IP; MANAGER_NAME=$MANAGER_NAME; CLUSTER_NAME=$CLUSTER_NAME; REPLICATION_PASSWORD=$REPLICATION_PASSWORD; $(<utils/db_setup.sh); $(<utils/initial_setup.sh); $(<utils/private_setup.sh); $(<utils/do_patches.sh); $(<main/build_setup.sh); $(<main/initial_setup.sh); $(<main/failguard_utils.sh); $(<main/standby_tooling.sh); $(<standby_setup.sh);"
     echo "Standby Setup Complete"
 }
 
@@ -163,7 +163,7 @@ setup_backup()
 {
     echo "Backup Second Setup Started"
     ssh -q -A -o "StrictHostKeyChecking no" root@${BACKUP_IP} \
-        "PRIMARY_NAME=$PRIMARY_NAME; STANDBY_IP=$STANDBY_IP; STANDBY_NAME=$STANDBY_NAME; CLUSTER_NAME=$CLUSTER_NAME; $(< main/failguard_utils.sh); $(< main/backup_tooling.sh); $(< backup_final.sh);"
+        "PRIMARY_NAME=$PRIMARY_NAME; STANDBY_IP=$STANDBY_IP; STANDBY_NAME=$STANDBY_NAME; CLUSTER_NAME=$CLUSTER_NAME; $(<main/failguard_utils.sh); $(<main/backup_tooling.sh); $(<backup_final.sh);"
     echo "Backup Second Setup Complete"
 }
 
@@ -171,7 +171,7 @@ setup_primary()
 {
     echo "Primary Second Setup Started"
     ssh -q -A -o "StrictHostKeyChecking no" root@${PRIMARY_IP} \
-        "BACKUP_IP=$BACKUP_IP; BACKUP_NAME=$BACKUP_NAME; CIPHER_PASSWORD=$CIPHER_PASSWORD; CLUSTER_NAME=$CLUSTER_NAME; STANDBY_IP=$STANDBY_IP; REPLICATION_PASSWORD=$REPLICATION_PASSWORD; $(< main/failguard_utils.sh); $(< main/primary_tooling.sh); $(< primary_final.sh);"
+        "BACKUP_IP=$BACKUP_IP; BACKUP_NAME=$BACKUP_NAME; CIPHER_PASSWORD=$CIPHER_PASSWORD; CLUSTER_NAME=$CLUSTER_NAME; STANDBY_IP=$STANDBY_IP; REPLICATION_PASSWORD=$REPLICATION_PASSWORD; $(<main/failguard_utils.sh); $(<main/primary_tooling.sh); $(<primary_final.sh);"
     echo "Primary Second Setup Complete"
 }
 
@@ -179,7 +179,7 @@ start_standby()
 {
     echo "Starting Standby"
     ssh -q -A -o "StrictHostKeyChecking no" root@${STANDBY_IP} \
-        "CLUSTER_NAME=$CLUSTER_NAME; $(< main/failguard_utils.sh); $(< standby_start.sh);"
+        "CLUSTER_NAME=$CLUSTER_NAME; $(<main/failguard_utils.sh); $(<standby_start.sh);"
     echo "Standby completed"
 }
 
@@ -187,7 +187,7 @@ start_backup()
 {
     echo "Starting Backup"
     ssh -q -A -o "StrictHostKeyChecking no" root@${BACKUP_IP} \
-        "CLUSTER_NAME=$CLUSTER_NAME; $(< main/failguard_utils.sh); $(< backup_start.sh);"
+        "CLUSTER_NAME=$CLUSTER_NAME; $(<main/failguard_utils.sh); $(<backup_start.sh);"
     echo "Backup completed"
 }
 
@@ -195,7 +195,7 @@ finish_manager()
 {
     echo "Finalizing Manager"
     ssh -q -A -o "StrictHostKeyChecking no" root@${MANAGER_IP} \
-        "CLUSTER_NAME=$CLUSTER_NAME; PRIMARY_IP=$PRIMARY_IP; PRIMARY_NAME=$PRIMARY_NAME; BACKUP_IP=$BACKUP_IP; BACKUP_NAME=$BACKUP_NAME; STANDBY_IP=$STANDBY_IP; STANDBY_NAME=$STANDBY_NAME; MANAGER_IP=$MANAGER_IP; MANAGER_NAME=$MANAGER_NAME; $(< main/failguard_utils.sh); $(< main/manager_tooling.sh); $(< manager_final.sh);"
+        "CLUSTER_NAME=$CLUSTER_NAME; PRIMARY_IP=$PRIMARY_IP; PRIMARY_NAME=$PRIMARY_NAME; BACKUP_IP=$BACKUP_IP; BACKUP_NAME=$BACKUP_NAME; STANDBY_IP=$STANDBY_IP; STANDBY_NAME=$STANDBY_NAME; MANAGER_IP=$MANAGER_IP; MANAGER_NAME=$MANAGER_NAME; $(<main/failguard_utils.sh); $(<main/manager_tooling.sh); $(<manager_final.sh);"
     echo "Manager completed"
 }
 
