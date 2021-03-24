@@ -6,20 +6,17 @@
 # Initial tools for setup
 configure_private_droplet()
 {
+    privateGatewayIp=$1
     apt install net-tools
     route -n
 
-    echo "What is your default Gateway IP listed above?"
-    read gatewayIp
-    # Specific to Digital Ocean
+    # Add gateway IP to the private routing endpoint.
+    gatewayIp=$(route -n | sed -n '3p' | awk '{ print $2 }')
     ip route add 169.254.169.254 via $gatewayIp dev eth0
 
     echo "What is the Private IP of this Droplet?"
-    read privateIp
+    privateIp=$(curl -w "\n" http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address)
     ip route change default via $privateIp
-
-    echo "What is the Private IP of your Gatewatay?"
-    read privateGatewayIp
 
     # IF MOVING THE FOLLOWING WATCH OUT FOR SPACING
     sed -i '/gateway4:/d' /etc/netplan/50-cloud-init.yaml

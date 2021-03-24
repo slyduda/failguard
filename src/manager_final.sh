@@ -10,6 +10,6 @@ insert_failguard_server $BACKUP_IP $BACKUP_NAME b
 insert_failguard_server $MANAGER_IP $MANAGER_NAME m
 
 # share with all
-send_manager_public_key $PRIMARY_IP postgres
-send_manager_public_key $STANDBY_IP postgres
-send_manager_public_key $BACKUP_IP pgbackrest
+# send_manager_public_key $PRIMARY_IP postgres
+# send_manager_public_key $STANDBY_IP postgres
+# send_manager_public_key $BACKUP_IP pgbackrest

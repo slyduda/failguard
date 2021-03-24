@@ -7,16 +7,16 @@ set_local_repository_primary_config()
 
     > /etc/pgbackrest/pgbackrest.conf
     echo "[$CLUSTER_NAME]
-    pg1-path=/var/lib/postgresql/12/main
+pg1-path=/var/lib/postgresql/12/main
 
-    [global]
-    repo1-cipher-pass=$CIPHER_PASSWORD
-    repo1-cipher-type=aes-256-cbc
-    repo1-path=/var/lib/pgbackrest
-    repo1-retention-full=2
+[global]
+repo1-cipher-pass=$CIPHER_PASSWORD
+repo1-cipher-type=aes-256-cbc
+repo1-path=/var/lib/pgbackrest
+repo1-retention-full=2
 
-    [global:archive-push]
-    compress-level=3" >> /etc/pgbackrest/pgbackrest.conf
+[global:archive-push]
+compress-level=3" >> /etc/pgbackrest/pgbackrest.conf
 }
 
 set_archiving_primary_config() 
@@ -61,18 +61,18 @@ set_backup_standby_primary_config()
 
     > /etc/pgbackrest/pgbackrest.conf
     echo "[$CLUSTER_NAME]
-    pg1-path=/var/lib/postgresql/12/main
+pg1-path=/var/lib/postgresql/12/main
 
-    [global]
-    repo1-host=$BACKUP_HOST
-    repo1-cipher-pass=$CIPHER_PASSWORD
-    repo1-cipher-type=aes-256-cbc
-    repo1-path=/var/lib/pgbackrest
-    repo1-retention-full=2
-    log-level-file=detail
+[global]
+repo1-host=$BACKUP_HOST
+repo1-cipher-pass=$CIPHER_PASSWORD
+repo1-cipher-type=aes-256-cbc
+repo1-path=/var/lib/pgbackrest
+repo1-retention-full=2
+log-level-file=detail
 
-    [global:archive-push]
-    compress-level=3" >> /etc/pgbackrest/pgbackrest.conf
+[global:archive-push]
+compress-level=3" >> /etc/pgbackrest/pgbackrest.conf
 }
 
 

@@ -15,13 +15,13 @@ set_backup_config()
 
     > /etc/pgbackrest/pgbackrest.conf
     echo "[$CLUSTER_NAME]
-    pg1-host=$PRIMARY_NAME
-    pg1-path=/var/lib/postgresql/12/main
+pg1-host=$PRIMARY_NAME
+pg1-path=/var/lib/postgresql/12/main
 
-    [global]
-    repo1-path=/var/lib/pgbackrest
-    repo1-retention-full=2
-    start-fast=y" >> /etc/pgbackrest/pgbackrest.conf
+[global]
+repo1-path=/var/lib/pgbackrest
+repo1-retention-full=2
+start-fast=y" >> /etc/pgbackrest/pgbackrest.conf
 
     # Test connection from pg-backup to pg-primary
     # sudo -u pgbackrest ssh postgres@$PRIMARY_NAME
@@ -35,15 +35,15 @@ set_backup_standby_backup_config()
     # On the backup
     > /etc/pgbackrest/pgbackrest.conf
     echo "[$CLUSTER_NAME]
-    pg1-host=$PRIMARY_NAME
-    pg1-path=/var/lib/postgresql/12/main
-    pg2-host=$STANDBY_NAME
-    pg2-path=/var/lib/postgresql/12/main
+pg1-host=$PRIMARY_NAME
+pg1-path=/var/lib/postgresql/12/main
+pg2-host=$STANDBY_NAME
+pg2-path=/var/lib/postgresql/12/main
 
-    [global]
-    backup-standby=y
-    process-max=3
-    repo1-path=/var/lib/pgbackrest
-    repo1-retention-full=2
-    start-fast=y" >> /etc/pgbackrest/pgbackrest.conf
+[global]
+backup-standby=y
+process-max=3
+repo1-path=/var/lib/pgbackrest
+repo1-retention-full=2
+start-fast=y" >> /etc/pgbackrest/pgbackrest.conf
 }

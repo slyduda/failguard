@@ -5,10 +5,6 @@
 
 configure_server()
 {
-    # Update and upgrade all packages on the server
-    sudo apt-get update -qq -y
-    sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade -qq -y
-
     USERNAME=$1
     PASSWORD=$2
 

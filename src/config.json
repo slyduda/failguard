@@ -10,7 +10,33 @@
         "cluster_name": "demo_cluster",
         "domain": "gemify.tech",
         "username": "test",
-        "password": "password"
+        "password": "password",
+        "public": false,
+        "gateway_ip": "10.124.0.1",
+        "instances": {
+            "build": {
+                "name": "db-build",
+                "ip": "10.124.0.2"
+            },
+            "management": {
+                "name": "db-manager",
+                "ip": "10.124.0.3"
+            },
+            "primary": {
+                "name": "test-db",
+                "ip": "10.124.0.4"
+            },
+            "backup": {
+                "name": "db-backup",
+                "ip": "10.124.0.5"
+            },
+            "standby": [
+                {
+                    "name": "test-standby-1",
+                    "ip": "10.124.0.6"
+                }
+            ]
+        }
     },
     "database": {
         "name": "test",

@@ -2,12 +2,14 @@
 
 create_cluster_hosts() 
 {
-    PRIMARY_IP=$1
-    PRIMARY_NAME=$2
-    BACKUP_IP=$3
-    BACKUP_NAME=$4
-    STANDBY_IP=$5 # Change this to an array of IPs later
-    STANDBY_NAME=$6 # Change this to an array of IPs later
+    MANAGER_IP=$1
+    MANAGER_NAME=$2
+    PRIMARY_IP=$3
+    PRIMARY_NAME=$4
+    BACKUP_IP=$5
+    BACKUP_NAME=$6
+    STANDBY_IP=$7 # Change this to an array of IPs later
+    STANDBY_NAME=$8 # Change this to an array of IPs later
 
     # Add hard coded variables to file
     echo "# ------ FAILGUARD ------- #" >> /etc/cloud/templates/hosts.debian.tmpl
@@ -20,12 +22,6 @@ create_cluster_hosts()
     echo "# Failguard Backup Host - FGBH" >> /etc/cloud/templates/hosts.debian.tmpl
     echo "$BACKUP_IP $BACKUP_NAME # Set by Failguard" >> /etc/cloud/templates/hosts.debian.tmpl
     # Iterate over multiple standby's
-}
-
-install_pgbackrest()
-{
-    REMOTE_HOST=$1
-    scp -o "ForwardAgent yes" /build/pgbackrest-release-2.32/src/pgbackrest $REMOTE_HOST:/usr/bin
 }
 
 create_pgbackrest_config()
@@ -43,7 +39,8 @@ create_pgbackrest_config()
     sudo chown $OWNER:$OWNER /etc/pgbackrest/pgbackrest.conf
 } 
 
-create_pgbackrest_repository(){
+create_pgbackrest_repository()
+{
     OWNER=$1
     # Create the pgBackRest repository
     sudo mkdir -p /var/lib/pgbackrest

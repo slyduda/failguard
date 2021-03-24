@@ -69,8 +69,15 @@ build_droplets()
     echo "Standby Private IP:" $PRIMARY_IP
 }
 
+install_pgbackrest()
+{
+    REMOTE_HOST=$1
+    scp -o "ForwardAgent yes" /build/pgbackrest-release-2.32/src/pgbackrest $REMOTE_HOST:/usr/bin
+}
+
 self_destruct()
 {
+    echo "$CLUSTER_NAME has been created! This server will now self-destruct."
     # Get the Private IP of the current machine (BUILD)
-    BUILD_IP=$(curl -w "\n" http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address)
+    # BUILD_IP=$(curl -w "\n" http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address)
 }
