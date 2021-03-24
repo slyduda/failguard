@@ -1,6 +1,6 @@
 #!/bin/sh
-source utils/do_patches.sh
-source main/build_setup.sh
+source $(dirname "$0")/utils/do_patches.sh
+source $(dirname "$0")/main/build_setup.sh
 
 do_patch_root_login
 do_patch_resolved
