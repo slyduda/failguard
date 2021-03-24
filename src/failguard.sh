@@ -132,6 +132,7 @@ init_manager()
     echo "Manager Setup Started"
     ssh -q -A -o "StrictHostKeyChecking no" root@${MANAGER_IP} \
         "USERNAME=$USERNAME; PASSWORD=$PASSWORD; GATEWAY_IP=$GATEWAY_IP; PRIMARY_IP=$PRIMARY_IP; PRIMARY_NAME=$PRIMARY_NAME; BACKUP_IP=$BACKUP_IP; BACKUP_NAME=$BACKUP_NAME; STANDBY_IP=$STANDBY_IP; STANDBY_NAME=$STANDBY_NAME; MANAGER_IP=$MANAGER_IP; MANAGER_NAME=$MANAGER_NAME; POSTGRES_PASSWORD=$POSTGRES_MANAGER_PASSWORD; $(< $(dirname "$0")/utils/db_setup.sh); $(< $(dirname "$0")/utils/initial_setup.sh); $(< $(dirname "$0")/utils/private_setup.sh); $(< $(dirname "$0")/utils/do_patches.sh); $(< $(dirname "$0")/main/initial_setup.sh); $(< $(dirname "$0")/main/failguard_utils.sh); $(< $(dirname "$0")/main/manager_tooling.sh); $(< $(dirname "$0")/manager_setup.sh);"
+        'USERNAME=sly; PASSWORD=cool password; GATEWAY_IP=10.124.0.6; PRIMARY_IP=10.124.0.14; PRIMARY_NAME=db-gemify-prod.gemify.tech; BACKUP_IP=10.124.0.15; BACKUP_NAME=db-backup.gemify.tech; STANDBY_IP=10.124.0.16; STANDBY_NAME=db-gemify-prod-b934c4a4.gemify.tech; MANAGER_IP=10.124.0.13; MANAGER_NAME=db-manager.gemify.tech; CLUSTER_NAME=gemify_cluster; ; ; ; ; ; ; ; ; ;'
     echo "Manager Setup Complete"
 }
 
