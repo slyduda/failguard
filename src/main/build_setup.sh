@@ -17,21 +17,22 @@ build_pgbackrest() {
 
 build_droplet()
 {
-
     NEW_HOST_NAME=$1
     new_droplet=$(curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer "${BEARER_TOKEN}"" -d '{"name":"'"${NEW_HOST_NAME}"'","region":"'"${REGION}"'","size":"s-1vcpu-1gb","image":"ubuntu-20-04-x64","ssh_keys":['"${SSH_KEY_ID}"'],"backups":false,"ipv6":true,"vpc_uuid":"'"${VPC_ID}"'"}' "https://api.digitalocean.com/v2/droplets")
-    new_droplet_id=$(echo $new_droplet | jq .droplet.id)
+    new_droplet_id=$(echo $new_droplet | jq -r ".droplet.id")
     new_droplet_details=$(curl -X GET -H "Content-Type: application/json" -H "Authorization: Bearer "${BEARER_TOKEN}"" "https://api.digitalocean.com/v2/droplets/"${new_droplet_id}"")
-    new_droplet_ip=$(echo $new_droplet_details | jq .droplet.networks.v4[0].ip_address)
+    new_droplet_ip=$(echo $new_droplet_details | jq -r ".droplet.networks.v4[1].ip_address // empty")
 
     while [ -z ${new_droplet_ip} ] ; do
         sleep 10
         new_droplet_details=$(curl -X GET -H "Content-Type: application/json" -H "Authorization: Bearer "${BEARER_TOKEN}"" "https://api.digitalocean.com/v2/droplets/"${new_droplet_id}"")
-        new_droplet_ip=$(echo $new_droplet_details | jq .droplet.networks.v4[0].ip_address)
+        new_droplet_ip=$(echo $new_droplet_details | jq -r ".droplet.networks.v4[1].ip_address // empty")
     done
 
-    #NEW_DROPLET_IP=$(ssh -q -A -o "StrictHostKeyChecking no" root@${new_droplet_ip} 'MANAGER_IP=$(curl -w "\n" http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address); echo $MANAGER_IP')
-    echo $new_droplet_ip
+    sleep 30
+    NEW_DROPLET_IP=$(ssh -q -A -o "StrictHostKeyChecking no" root@${new_droplet_ip} 'MANAGER_IP=$(curl -w "\n" http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address); echo $MANAGER_IP')
+    echo $NEW_DROPLET_IP
+
 }
 
 build_droplets()
@@ -45,7 +46,7 @@ build_droplets()
 
     # Later we can do it without regions
     MANAGER_NAME="db-manager.$DOMAIN"
-    PRIMARY_NAME="db-${DB_NAME}.${DOMAIN}" 
+    PRIMARY_NAME="db-${DB_NAME}.${DOMAIN}"
     BACKUP_NAME="db-backup.${DOMAIN}"
     STANDBY_NAME="db-${DB_NAME}-${UNIQUEID}.${DOMAIN}"
 
@@ -54,26 +55,20 @@ build_droplets()
     MANAGER_IP=$(build_droplet $MANAGER_NAME)
     echo "Manager Private IP:" $MANAGER_IP
 
-    sleep 3
-
     # PRIMARY INSTANCE
     echo "Building the primary instance"
     PRIMARY_IP=$(build_droplet $PRIMARY_NAME)
     echo "Primary Private IP:" $PRIMARY_IP
 
-    sleep 3
-
     # BACKUP INSTANCE
     echo "Building the backup instance"
     BACKUP_IP=$(build_droplet $BACKUP_NAME)
-    echo "Backup Private IP:" $PRIMARY_IP
-
-    sleep 3
+    echo "Backup Private IP:" $BACKUP_IP
 
     # STANDBY INSTANCE
     echo "Building the standby instance"
     STANDBY_IP=$(build_droplet $STANDBY_NAME)
-    echo "Standby Private IP:" $PRIMARY_IP
+    echo "Standby Private IP:" $STANDBY_IP
 }
 
 install_pgbackrest()
