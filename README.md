@@ -75,7 +75,7 @@ Installation begins on a disposable Ubuntu server. Simple clone this repository 
 ```sh
 sudo git clone https://github.com/slyduda/failguard.git 
 sudo chmod +x ./failguard/src/failguard.sh
-bash /failguard/src/failguard.sh
+bash failguard/src/failguard.sh
 ```
 
 [(Back to top)](#table-of-contents)

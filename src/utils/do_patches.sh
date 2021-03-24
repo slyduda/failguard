@@ -3,7 +3,7 @@
 do_patch_root_login()
 {
     # 
-    sed -i 's/.*PermitRootLogin.*/PermitRootLogin prohibit-password/g' /etc/ssh/sshd_config
+    sed -i 's/.*PermitRootLogin.*/#PermitRootLogin prohibit-password/g' /etc/ssh/sshd_config
 }
 
 do_patch_resolved()

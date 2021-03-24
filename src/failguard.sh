@@ -1,6 +1,6 @@
 #!/bin/sh
-source $(dirname "$0")/main/failguard_utils.sh
 source $(dirname "$0")/utils/do_patches.sh
+source $(dirname "$0")/main/build_setup.sh
 
 do_patch_root_login
 do_patch_resolved
