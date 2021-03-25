@@ -19,9 +19,6 @@ sudo apt-get update -qq -y
 sudo apt-get upgrade -qq -y
 sudo apt-get install jq -qq -y
 
-
-
-
 # EMPTY VARIABLES
 VPC_ID=''
 REGION=''
@@ -110,37 +107,6 @@ else
     # Generate a cipher password
     CIPHER_PASSWORD=$(openssl rand -base64 48)
 fi
-
-echo $VPC_ID
-echo $REGION
-echo $SSH_KEY_ID
-echo $BEARER_TOKEN
-
-echo $CLUSTER_NAME
-echo $DOMAIN
-echo $USERNAME
-echo $PASSWORD
-
-echo $DB_NAME
-echo $POSTGRES_MANAGER_PASSWORD
-echo $POSTGRES_PASSWORD
-echo $REPLICATION_PASSWORD
-
-echo $MANAGER_IP
-echo $PRIMARY_IP
-echo $STANDBY_IP
-echo $BACKUP_IP
-echo $BUILD_IP
-
-echo $MANAGER_NAME
-echo $PRIMARY_NAME
-echo $BACKUP_NAME
-echo $STANDBY_NAME
-echo $BUILD_NAME
-
-echo $GATEWAY_IP
-
-echo $CIPHER_PASSWORD
 
 # Initial Build
 init_build()
