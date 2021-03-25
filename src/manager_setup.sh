@@ -1,18 +1,18 @@
 #!/bin/sh
-source $(dirname "$0")/utils/db_setup.sh
-source $(dirname "$0")/utils/initial_setup.sh
-source $(dirname "$0")/utils/private_setup.sh
-source $(dirname "$0")/utils/do_patches.sh
+# source $(dirname "$0")/utils/db_setup.sh
+# source $(dirname "$0")/utils/initial_setup.sh
+# source $(dirname "$0")/utils/private_setup.sh
+# source $(dirname "$0")/utils/do_patches.sh# 
 
-source $(dirname "$0")/main/initial_setup.sh
-source $(dirname "$0")/main/failguard_utils.sh 
-source $(dirname "$0")/main/manager_tooling.sh
+# source $(dirname "$0")/main/initial_setup.sh
+# source $(dirname "$0")/main/failguard_utils.sh 
+# source $(dirname "$0")/main/manager_tooling.sh
 
 do_patch_root_login
 do_patch_resolved
 
 sudo apt-get update -qq -y
-sudo apt-get upgrade -qq -y
+# sudo apt-get upgrade -qq -y
 
 # Initial Config
 configure_private_droplet $GATEWAY_IP

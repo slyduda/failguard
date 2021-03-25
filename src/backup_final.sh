@@ -1,6 +1,6 @@
 #!/bin/sh
-source $(dirname "$0")/main/failguard_utils.sh
-source $(dirname "$0")/main/backup_tooling.sh
+# source $(dirname "$0")/main/failguard_utils.sh
+# source $(dirname "$0")/main/backup_tooling.sh
 
 # Share Backup Key with Standby 
 send_pgbackrest_public_key $STANDBY_IP
