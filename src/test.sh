@@ -1,7 +1,8 @@
 #!/bin/sh
-echo $SOME_VARIABLE
+source $(dirname "$0")/main/test_tools.sh
 
-PASSWORD=password;SOME_VARIABLE=someg
+PASSWORD=password
+SOME_VARIABLE=someg
 MANAGER_IP=10.124.0.12
 
 init_something()
