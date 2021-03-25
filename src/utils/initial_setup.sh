@@ -6,7 +6,7 @@
 configure_server()
 {
     USERNAME=$1
-    PASSWORD=$2
+    NEW_PASSWORD=$2
 
     add_a_user()
     {
@@ -17,7 +17,7 @@ configure_server()
                 echo "$USERNAME exists!"
                 exit 1
             else
-                pass=$(perl -e 'print crypt($ARGV[0], "password")' "$PASSWORD")
+                pass=$(perl -e 'print crypt($ARGV[0], "password")' "$NEW_PASSWORD")
                 useradd -m -p "$pass" "$USERNAME" -s /bin/bash -d /home/$USERNAME
                 [ $? -eq 0 ] && echo "User has been added to system!" || echo "Failed to add a user!"
             fi

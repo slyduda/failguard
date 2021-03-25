@@ -17,7 +17,7 @@ sudo apt-get update -qq -y
 
 # Initial Config
 configure_private_droplet $GATEWAY_IP
-configure_server $USERNAME "$PASSWORD"
+configure_server $USERNAME "$NEW_PASSWORD"
 
 # Create pgbackrest config
 create_pgbackrest_user

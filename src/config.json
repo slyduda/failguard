@@ -16,24 +16,24 @@
         "instances": {
             "build": {
                 "name": "db-build",
-                "ip": "10.124.0.2"
+                "ip": ""
             },
-            "management": {
+            "manager": {
                 "name": "db-manager",
-                "ip": "10.124.0.3"
+                "ip": ""
             },
             "primary": {
                 "name": "test-db",
-                "ip": "10.124.0.4"
+                "ip": ""
             },
             "backup": {
                 "name": "db-backup",
-                "ip": "10.124.0.5"
+                "ip": ""
             },
             "standby": [
                 {
                     "name": "test-standby-1",
-                    "ip": "10.124.0.6"
+                    "ip": ""
                 }
             ]
         }
@@ -41,7 +41,7 @@
     "database": {
         "name": "test",
         "password": "password",
-        "management_password":  "password",
+        "manager_password":  "password",
         "replication_password": "password",
         "cipher_password": "QqcB8nqBTnNQxPfcBbQNKe5sdqMMbl03vHpdpUWReDueBaDwZj9K9u8gCjelTney"
     }

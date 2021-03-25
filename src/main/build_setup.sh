@@ -18,6 +18,12 @@ build_droplet()
     NEW_HOST_NAME=$1
     new_droplet=$(curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer "${BEARER_TOKEN}"" -d '{"name":"'"${NEW_HOST_NAME}"'","region":"'"${REGION}"'","size":"s-1vcpu-1gb","image":"ubuntu-20-04-x64","ssh_keys":['"${SSH_KEY_ID}"'],"backups":false,"ipv6":true,"vpc_uuid":"'"${VPC_ID}"'"}' "https://api.digitalocean.com/v2/droplets")
     new_droplet_id=$(echo $new_droplet | jq -r ".droplet.id")
+    echo $new_droplet_id
+}
+
+get_droplet_private_ip()
+{
+    new_droplet_id=$1
     new_droplet_details=$(curl -X GET -H "Content-Type: application/json" -H "Authorization: Bearer "${BEARER_TOKEN}"" "https://api.digitalocean.com/v2/droplets/"${new_droplet_id}"")
     new_droplet_ip=$(echo $new_droplet_details | jq -r ".droplet.networks.v4[1].ip_address // empty")
 
@@ -27,13 +33,17 @@ build_droplet()
         new_droplet_ip=$(echo $new_droplet_details | jq -r ".droplet.networks.v4[1].ip_address // empty")
     done
 
-    sleep 30
+    ssh-keyscan $new_droplet_ip 2>&1 | grep -v "^$" > /dev/null
+    while [ $? != 0 ] ; do
+        sleep 5
+        ssh-keyscan $new_droplet_ip 2>&1 | grep -v "^$" > /dev/null
+    done
+
     NEW_DROPLET_IP=$(ssh -q -A -o "StrictHostKeyChecking no" root@${new_droplet_ip} 'MANAGER_IP=$(curl -w "\n" http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address); echo $MANAGER_IP')
     echo $NEW_DROPLET_IP
-
 }
 
-build_droplets()
+get_random_id()
 {
     # Create a random uuid for the standby.
     uuidSample=$(uuidgen)
@@ -41,32 +51,91 @@ build_droplets()
     read -a strarr <<< "$uuidSample"
     UNIQUEID=${strarr[0]}
     IFS=" "
+    echo $UNIQUEID
+}
+
+build_droplets()
+{
+    UNIQUEID=$(get_random_id)
 
     # Later we can do it without regions
+    BACKUP_NAME="db-backup.${DOMAIN}"
     MANAGER_NAME="db-manager.$DOMAIN"
     PRIMARY_NAME="db-${DB_NAME}.${DOMAIN}"
-    BACKUP_NAME="db-backup.${DOMAIN}"
     STANDBY_NAME="db-${DB_NAME}-${UNIQUEID}.${DOMAIN}"
+    
+    BACKUP_ID=0 
+    MANAGER_ID=0
+    PRIMARY_ID=0
+    STANDBY_ID=0
 
-    # MANAGER INSTANCE
-    echo "Building the manager instance"
-    MANAGER_IP=$(build_droplet $MANAGER_NAME)
-    echo "Manager Private IP:" $MANAGER_IP
+    # Create Droplets for all types that did not have IPs specified.
+    echo "Building all droplet instances"
+    if [[ $BACKUP_IP ]]; then
+        echo "Backup exists"
+    else
+        echo "Building $BACKUP_NAME"
+        BACKUP_ID=$(build_droplet $BACKUP_NAME)
+    fi
 
-    # PRIMARY INSTANCE
-    echo "Building the primary instance"
-    PRIMARY_IP=$(build_droplet $PRIMARY_NAME)
-    echo "Primary Private IP:" $PRIMARY_IP
+    if [[ $MANAGER_IP ]]; then
+        echo "Manager exists"
+    else
+        echo "Building $MANAGER_NAME"
+        MANAGER_ID=$(build_droplet $MANAGER_NAME)
+    fi
+    
+    if [[ $PRIMARY_IP ]]; then
+        echo "Primary exists"
+    else
+        echo "Building $PRIMARY_NAME"
+        PRIMARY_ID=$(build_droplet $PRIMARY_NAME)
+    fi
 
-    # BACKUP INSTANCE
-    echo "Building the backup instance"
-    BACKUP_IP=$(build_droplet $BACKUP_NAME)
-    echo "Backup Private IP:" $BACKUP_IP
+    if [[ $STANDBY_IP ]]; then
+        echo "Standby exists"
+    else
+        echo "Building $STANDBY_NAME"
+        STANDBY_ID=$(build_droplet $STANDBY_NAME)
+    fi
+    
+    # Wait for all droplets to finish building
+    sleep 45
 
-    # STANDBY INSTANCE
-    echo "Building the standby instance"
-    STANDBY_IP=$(build_droplet $STANDBY_NAME)
-    echo "Standby Private IP:" $STANDBY_IP
+    # Get the IP addresses of all Droplets that were created
+    echo "Building all droplet instances"
+    if [[ $BACKUP_IP ]]; then
+        echo "Backup exists"
+    else
+        echo "Fetching $BACKUP_NAME Private IP"
+        BACKUP_IP=$(get_droplet_private_ip $BACKUP_ID)
+    fi
+
+    if [[ $MANAGER_IP ]]; then
+        echo "Manager exists"
+    else
+        echo "Fetching $MANAGER_NAME Private IP"
+        MANAGER_IP=$(get_droplet_private_ip $MANAGER_ID)
+    fi
+    
+    if [[ $PRIMARY_IP ]]; then
+        echo "Primary exists"
+    else
+        echo "Fetching $PRIMARY_NAME Private IP"
+        PRIMARY_IP=$(get_droplet_private_ip $PRIMARY_ID)
+    fi
+
+    if [[ $STANDBY_IP ]]; then
+        echo "Standby exists"
+    else
+        echo "Fetching $STANDBY_NAME Private IP"
+        STANDBY_IP=$(get_droplet_private_ip $STANDBY_ID)
+    fi
+
+    echo $BACKUP_NAME":" $BACKUP_IP
+    echo $MANAGER_NAME":" $MANAGER_IP
+    echo $PRIMARY_NAME":" $PRIMARY_IP
+    echo $STANDBY_NAME":" $STANDBY_IP
 }
 
 install_pgbackrest()
