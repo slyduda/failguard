@@ -3,5 +3,7 @@ echo "FAKE MAIN FUNCTION"
 
 external_function()
 {
-    echo "HIIIIIIII"
+    EXTERNAL_HOSTNAME=$(hostname)
+    sudo apt-get update -qq -y
+    echo "Finished sudo apt-get update on: "$EXTERNAL_HOSTNAME
 }

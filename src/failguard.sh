@@ -39,6 +39,8 @@ BACKUP_NAME=''
 STANDBY_NAME=''
 BUILD_NAME=''
 
+FAILGUARD_DEBUG=''
+
 if [ -f $(dirname "$0")/config.prod.json ]; then
     VPC_ID=$( jq -r ".environment.vpc" $(dirname "$0")/config.prod.json ) 
     REGION=$( jq -r ".environment.region" $(dirname "$0")/config.prod.json )
@@ -67,6 +69,7 @@ if [ -f $(dirname "$0")/config.prod.json ]; then
     BUILD_NAME=$( jq -r ".server.instances.build.name" $(dirname "$0")/config.prod.json )   
     CIPHER_PASSWORD=$( jq -r ".database.cipher_password" $(dirname "$0")/config.prod.json )
 
+    FAILGUARD_DEBUG=$( jq -r ".debug" $(dirname "$0")/config.prod.json )
 else
     read -p "Enter VPC ID : " VPC_ID
     read -p "Enter Region : " REGION
@@ -96,6 +99,7 @@ else
 
     # Generate a cipher password
     CIPHER_PASSWORD=$(openssl rand -base64 48)
+    FAILGUARD_DEBUG=false
 fi
 
 # Initial Build
@@ -105,9 +109,13 @@ init_build()
     build_pgbackrest
     
     # Install pgbackrest on each machine
-    install_pgbackrest $PRIMARY_IP
-    install_pgbackrest $STANDBY_IP
-    install_pgbackrest $BACKUP_IP
+    if $FAILGUARD_DEBUG; then
+        echo "Skipping pgbackrest install (DEBUG MODE)"
+    else
+        install_pgbackrest $BACKUP_IP
+        install_pgbackrest $PRIMARY_IP
+        install_pgbackrest $STANDBY_IP
+    fi
 }
 
 init_manager()
@@ -173,14 +181,22 @@ finish_manager()
         "CLUSTER_NAME=$CLUSTER_NAME; PRIMARY_IP=$PRIMARY_IP; PRIMARY_NAME=$PRIMARY_NAME; BACKUP_IP=$BACKUP_IP; BACKUP_NAME=$BACKUP_NAME; STANDBY_IP=$STANDBY_IP; STANDBY_NAME=$STANDBY_NAME; MANAGER_IP=$MANAGER_IP; MANAGER_NAME=$MANAGER_NAME; $(< $(dirname "$0")/main/failguard_utils.sh); $(< $(dirname "$0")/main/manager_tooling.sh); $(< $(dirname "$0")/manager_final.sh);"
 }
 
-init_build
-init_manager
-init_primary
-init_backup
-init_standby
-setup_backup
-setup_primary
-# start_standby
-# start_backup
-finish_manager
-self_destruct
+# Install pgbackrest on each machine
+if $FAILGUARD_DEBUG; then
+    init_build
+    init_manager
+    self_destruct
+else
+    init_build
+    init_manager
+    init_primary
+    init_backup
+    init_standby
+    setup_backup
+    setup_primary
+    # start_standby
+    # start_backup
+    finish_manager
+    self_destruct
+fi
+

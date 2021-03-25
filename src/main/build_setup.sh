@@ -69,73 +69,97 @@ build_droplets()
     PRIMARY_ID=0
     STANDBY_ID=0
 
-    # Create Droplets for all types that did not have IPs specified.
-    echo "Building all droplet instances"
-    if [[ $BACKUP_IP ]]; then
-        echo "Backup exists"
-    else
-        echo "Building $BACKUP_NAME"
-        BACKUP_ID=$(build_droplet $BACKUP_NAME)
-    fi
+    if $FAILGUARD_DEBUG; then
+        # Create Droplets for all types that did not have IPs specified.
+        echo "Building debug droplet instances"
+        if [[ $MANAGER_IP ]]; then
+            echo "Manager exists"
+        else
+            echo "Building $MANAGER_NAME"
+            MANAGER_ID=$(build_droplet $MANAGER_NAME)
+        fi
+        
+        # Wait for all droplets to finish building
+        sleep 45
 
-    if [[ $MANAGER_IP ]]; then
-        echo "Manager exists"
-    else
-        echo "Building $MANAGER_NAME"
-        MANAGER_ID=$(build_droplet $MANAGER_NAME)
-    fi
-    
-    if [[ $PRIMARY_IP ]]; then
-        echo "Primary exists"
-    else
-        echo "Building $PRIMARY_NAME"
-        PRIMARY_ID=$(build_droplet $PRIMARY_NAME)
-    fi
+        # Get the IP addresses of all Droplets that were created
+        if [[ $MANAGER_IP ]]; then
+            echo "Manager exists"
+        else
+            echo "Fetching $MANAGER_NAME Private IP"
+            MANAGER_IP=$(get_droplet_private_ip $MANAGER_ID)
+        fi
 
-    if [[ $STANDBY_IP ]]; then
-        echo "Standby exists"
+        echo $MANAGER_NAME":" $MANAGER_IP
     else
-        echo "Building $STANDBY_NAME"
-        STANDBY_ID=$(build_droplet $STANDBY_NAME)
-    fi
-    
-    # Wait for all droplets to finish building
-    sleep 45
+        # Create Droplets for all types that did not have IPs specified.
+        echo "Building all droplet instances"
+        if [[ $BACKUP_IP ]]; then
+            echo "Backup exists"
+        else
+            echo "Building $BACKUP_NAME"
+            BACKUP_ID=$(build_droplet $BACKUP_NAME)
+        fi
 
-    # Get the IP addresses of all Droplets that were created
-    echo "Building all droplet instances"
-    if [[ $BACKUP_IP ]]; then
-        echo "Backup exists"
-    else
-        echo "Fetching $BACKUP_NAME Private IP"
-        BACKUP_IP=$(get_droplet_private_ip $BACKUP_ID)
-    fi
+        if [[ $MANAGER_IP ]]; then
+            echo "Manager exists"
+        else
+            echo "Building $MANAGER_NAME"
+            MANAGER_ID=$(build_droplet $MANAGER_NAME)
+        fi
+        
+        if [[ $PRIMARY_IP ]]; then
+            echo "Primary exists"
+        else
+            echo "Building $PRIMARY_NAME"
+            PRIMARY_ID=$(build_droplet $PRIMARY_NAME)
+        fi
 
-    if [[ $MANAGER_IP ]]; then
-        echo "Manager exists"
-    else
-        echo "Fetching $MANAGER_NAME Private IP"
-        MANAGER_IP=$(get_droplet_private_ip $MANAGER_ID)
-    fi
-    
-    if [[ $PRIMARY_IP ]]; then
-        echo "Primary exists"
-    else
-        echo "Fetching $PRIMARY_NAME Private IP"
-        PRIMARY_IP=$(get_droplet_private_ip $PRIMARY_ID)
-    fi
+        if [[ $STANDBY_IP ]]; then
+            echo "Standby exists"
+        else
+            echo "Building $STANDBY_NAME"
+            STANDBY_ID=$(build_droplet $STANDBY_NAME)
+        fi
+        
+        # Wait for all droplets to finish building
+        sleep 45
 
-    if [[ $STANDBY_IP ]]; then
-        echo "Standby exists"
-    else
-        echo "Fetching $STANDBY_NAME Private IP"
-        STANDBY_IP=$(get_droplet_private_ip $STANDBY_ID)
-    fi
+        # Get the IP addresses of all Droplets that were created
+        echo "Fetching all droplet instance Private IPs"
+        if [[ $BACKUP_IP ]]; then
+            echo "Backup exists"
+        else
+            echo "Fetching $BACKUP_NAME Private IP"
+            BACKUP_IP=$(get_droplet_private_ip $BACKUP_ID)
+        fi
 
-    echo $BACKUP_NAME":" $BACKUP_IP
-    echo $MANAGER_NAME":" $MANAGER_IP
-    echo $PRIMARY_NAME":" $PRIMARY_IP
-    echo $STANDBY_NAME":" $STANDBY_IP
+        if [[ $MANAGER_IP ]]; then
+            echo "Manager exists"
+        else
+            echo "Fetching $MANAGER_NAME Private IP"
+            MANAGER_IP=$(get_droplet_private_ip $MANAGER_ID)
+        fi
+        
+        if [[ $PRIMARY_IP ]]; then
+            echo "Primary exists"
+        else
+            echo "Fetching $PRIMARY_NAME Private IP"
+            PRIMARY_IP=$(get_droplet_private_ip $PRIMARY_ID)
+        fi
+
+        if [[ $STANDBY_IP ]]; then
+            echo "Standby exists"
+        else
+            echo "Fetching $STANDBY_NAME Private IP"
+            STANDBY_IP=$(get_droplet_private_ip $STANDBY_ID)
+        fi
+
+        echo $BACKUP_NAME":" $BACKUP_IP
+        echo $MANAGER_NAME":" $MANAGER_IP
+        echo $PRIMARY_NAME":" $PRIMARY_IP
+        echo $STANDBY_NAME":" $STANDBY_IP
+    fi
 }
 
 install_pgbackrest()

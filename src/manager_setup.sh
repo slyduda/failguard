@@ -8,6 +8,9 @@
 # source $(dirname "$0")/main/failguard_utils.sh 
 # source $(dirname "$0")/main/manager_tooling.sh
 
+EXTERNAL_HOSTNAME=$(hostname)
+echo "Securely Logged into: "$EXTERNAL_HOSTNAME
+
 do_patch_root_login
 do_patch_resolved
 
