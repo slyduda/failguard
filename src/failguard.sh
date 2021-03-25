@@ -1,16 +1,6 @@
 #!/bin/sh
 . $(dirname "$0")/utils/do_patches.sh
-. $(dirname "$0")/utils/db_setup.sh
-. $(dirname "$0")/utils/initial_setup.sh
-. $(dirname "$0")/utils/private_setup.sh
-
-. $(dirname "$0")/main/backup_tooling.sh
 . $(dirname "$0")/main/build_setup.sh
-. $(dirname "$0")/main/failguard_utils.sh
-. $(dirname "$0")/main/initial_setup.sh
-. $(dirname "$0")/main/manager_tooling.sh
-. $(dirname "$0")/main/primary_tooling.sh
-. $(dirname "$0")/main/standby_tooling.sh
 
 do_patch_root_login
 do_patch_resolved
