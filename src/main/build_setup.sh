@@ -40,6 +40,10 @@ get_droplet_private_ip()
     done
 
     NEW_DROPLET_IP=$(ssh -q -A -o "StrictHostKeyChecking no" root@${new_droplet_ip} 'MANAGER_IP=$(curl -w "\n" http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address); echo $MANAGER_IP')
+    while [ -z ${NEW_DROPLET_IP} ] ; do
+        sleep 10
+        NEW_DROPLET_IP=$(ssh -q -A -o "StrictHostKeyChecking no" root@${new_droplet_ip} 'MANAGER_IP=$(curl -w "\n" http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address); echo $MANAGER_IP')
+    done
     echo $NEW_DROPLET_IP
 }
 
