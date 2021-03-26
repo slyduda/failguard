@@ -134,7 +134,7 @@ STANDBY_IP=$STANDBY_IP;
 STANDBY_NAME=$STANDBY_NAME; 
 MANAGER_IP=$MANAGER_IP; 
 MANAGER_NAME=$MANAGER_NAME; 
-POSTGRES_PASSWORD=$POSTGRES_MANAGER_PASSWORD;
+POSTGRES_PASSWORD="$POSTGRES_MANAGER_PASSWORD";
 $(< $(dirname "$0")/utils/db_setup.sh); 
 $(< $(dirname "$0")/utils/initial_setup.sh); 
 $(< $(dirname "$0")/utils/private_setup.sh); 
