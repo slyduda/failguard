@@ -16,6 +16,7 @@ SSH_KEY_ID=''
 BEARER_TOKEN=''
 
 DB_NAME=''
+SERVER_NAME=''
 CLUSTER_NAME=''
 DOMAIN=''
 GATEWAY_IP=''
@@ -47,11 +48,12 @@ if [ -f $(dirname "$0")/config.prod.json ]; then
     SSH_KEY_ID=$( jq -r ".environment.ssh_key" $(dirname "$0")/config.prod.json )
     BEARER_TOKEN=$( jq -r ".environment.api_key" $(dirname "$0")/config.prod.json )
 
-    CLUSTER_NAME=$( jq -r ".server.cluster_name" $(dirname "$0")/config.prod.json )
+    SERVER_NAME=$(  jq -r ".server.name" $(dirname "$0")/config.prod.json )
     DOMAIN=$( jq -r ".server.domain" $(dirname "$0")/config.prod.json )
     USERNAME=$( jq -r ".server.username" $(dirname "$0")/config.prod.json )
     NEW_PASSWORD=$( jq -r ".server.password" $(dirname "$0")/config.prod.json )
 
+    CLUSTER_NAME=$( jq -r ".database.cluster_name" $(dirname "$0")/config.prod.json )
     DB_NAME=$(  jq -r ".database.name" $(dirname "$0")/config.prod.json )
     POSTGRES_MANAGER_PASSWORD=$( jq -r ".database.password" $(dirname "$0")/config.prod.json )
     POSTGRES_PASSWORD=$( jq -r ".database.manager_password" $(dirname "$0")/config.prod.json )
@@ -78,6 +80,7 @@ else
     read -p "Enter Bearer Token : " BEARER_TOKEN
     read -p "Enter your DB Name : " DB_NAME
     read -p "Enter your Cluster Name : " CLUSTER_NAME
+    read -p "Enter your Server Name : " SERVER_NAME
     read -p "Enter your Domain : " DOMAIN
     read -p "Enter your Private Gateway IP : " GATEWAY_IP
 
@@ -152,6 +155,7 @@ init_primary()
     ssh -q -A -o "StrictHostKeyChecking no" root@${PRIMARY_IP} 'bash -s' <<EOT
 USERNAME=$USERNAME; 
 NEW_PASSWORD="$NEW_PASSWORD"; 
+SERVER_NAME=$SERVER_NAME;
 DB_NAME=$DB_NAME; 
 POSTGRES_PASSWORD="$POSTGRES_PASSWORD"; 
 GATEWAY_IP=$GATEWAY_IP; 
@@ -209,7 +213,8 @@ init_standby()
     echo "Standby Setup Started"
     ssh -q -A -o "StrictHostKeyChecking no" root@${STANDBY_IP} 'bash -s' <<EOT
 USERNAME=$USERNAME; 
-NEW_PASSWORD="$NEW_PASSWORD"; 
+NEW_PASSWORD="$NEW_PASSWORD";  
+SERVER_NAME=$SERVER_NAME;
 DB_NAME=$DB_NAME; 
 POSTGRES_PASSWORD="$POSTGRES_PASSWORD"; 
 GATEWAY_IP=$GATEWAY_IP; 
