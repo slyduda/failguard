@@ -61,6 +61,7 @@ if [ -f $(dirname "$0")/config.prod.json ]; then
     STANDBY_IP=$( jq -r ".server.instances.standby[0].ip" $(dirname "$0")/config.prod.json )
     BACKUP_IP=$( jq -r ".server.instances.backup.ip" $(dirname "$0")/config.prod.json )
     BUILD_IP=$( jq -r ".server.instances.build.ip" $(dirname "$0")/config.prod.json )
+    GATEWAY_IP=$( jq -r ".server.gateway_ip" $(dirname "$0")/config.prod.json )
 
     MANAGER_NAME=$( jq -r ".server.instances.manager.name" $(dirname "$0")/config.prod.json )
     PRIMARY_NAME=$( jq -r ".server.instances.primary.name" $(dirname "$0")/config.prod.json )
