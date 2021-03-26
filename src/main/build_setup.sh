@@ -84,7 +84,11 @@ build_droplets()
         fi
         
         # Wait for all droplets to finish building
-        sleep 45
+        if [[ $MANAGER_IP ]]; then
+            sleep 5
+        else
+            sleep 45
+        fi
 
         # Get the IP addresses of all Droplets that were created
         if [[ $MANAGER_IP ]]; then
