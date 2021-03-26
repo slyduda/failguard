@@ -122,64 +122,186 @@ init_build()
 init_manager()
 {
     echo "Manager Setup Started"
-    ssh -q -A -o "StrictHostKeyChecking no" root@${MANAGER_IP} \
-        "USERNAME=$USERNAME; NEW_PASSWORD=$NEW_PASSWORD; GATEWAY_IP=$GATEWAY_IP; PRIMARY_IP=$PRIMARY_IP; PRIMARY_NAME=$PRIMARY_NAME; BACKUP_IP=$BACKUP_IP; BACKUP_NAME=$BACKUP_NAME; STANDBY_IP=$STANDBY_IP; STANDBY_NAME=$STANDBY_NAME; MANAGER_IP=$MANAGER_IP; MANAGER_NAME=$MANAGER_NAME; POSTGRES_PASSWORD=$POSTGRES_MANAGER_PASSWORD; $(< $(dirname "$0")/utils/db_setup.sh); $(< $(dirname "$0")/utils/initial_setup.sh); $(< $(dirname "$0")/utils/private_setup.sh); $(< $(dirname "$0")/utils/do_patches.sh); $(< $(dirname "$0")/main/initial_setup.sh); $(< $(dirname "$0")/main/failguard_utils.sh); $(< $(dirname "$0")/main/manager_tooling.sh); $(< $(dirname "$0")/manager_setup.sh);"
+    ssh -q -A -o "StrictHostKeyChecking no" root@${MANAGER_IP} 'bash -s' <<EOT
+USERNAME=$USERNAME; 
+NEW_PASSWORD=$NEW_PASSWORD; 
+GATEWAY_IP=$GATEWAY_IP; 
+PRIMARY_IP=$PRIMARY_IP; 
+PRIMARY_NAME=$PRIMARY_NAME; 
+BACKUP_IP=$BACKUP_IP; 
+BACKUP_NAME=$BACKUP_NAME; 
+STANDBY_IP=$STANDBY_IP; 
+STANDBY_NAME=$STANDBY_NAME; 
+MANAGER_IP=$MANAGER_IP; 
+MANAGER_NAME=$MANAGER_NAME; 
+POSTGRES_PASSWORD=$POSTGRES_MANAGER_PASSWORD;
+$(< $(dirname "$0")/utils/db_setup.sh); 
+$(< $(dirname "$0")/utils/initial_setup.sh); 
+$(< $(dirname "$0")/utils/private_setup.sh); 
+$(< $(dirname "$0")/utils/do_patches.sh); 
+$(< $(dirname "$0")/main/initial_setup.sh); 
+$(< $(dirname "$0")/main/failguard_utils.sh); 
+$(< $(dirname "$0")/main/manager_tooling.sh); 
+$(< $(dirname "$0")/manager_setup.sh);
+EOT
 }
 
 init_primary()
 {
     echo "Primary Setup Started"
-    ssh -q -A -o "StrictHostKeyChecking no" root@${PRIMARY_IP} \
-        "USERNAME=$USERNAME; NEW_PASSWORD=$NEW_PASSWORD; DB_NAME=$DB_NAME; POSTGRES_PASSWORD=$POSTGRES_PASSWORD; GATEWAY_IP=$GATEWAY_IP; MANAGER_IP=$MANAGER_IP; MANAGER_NAME=$MANAGER_NAME; PRIMARY_IP=$PRIMARY_IP; PRIMARY_NAME=$PRIMARY_NAME; BACKUP_IP=$BACKUP_IP; BACKUP_NAME=$BACKUP_NAME; STANDBY_IP=$STANDBY_IP; STANDBY_NAME=$STANDBY_NAME; CLUSTER_NAME=$CLUSTER_NAME; $(< $(dirname "$0")/utils/db_setup.sh); $(< $(dirname "$0")/utils/initial_setup.sh); $(< $(dirname "$0")/utils/private_setup.sh); $(< $(dirname "$0")/utils/do_patches.sh); $(< $(dirname "$0")/main/build_setup.sh);  $(< $(dirname "$0")/main/initial_setup.sh); $(< $(dirname "$0")/main/failguard_utils.sh); $(< $(dirname "$0")/main/primary_tooling.sh); $(< $(dirname "$0")/primary_setup.sh);"
+    ssh -q -A -o "StrictHostKeyChecking no" root@${PRIMARY_IP} 'bash -s' <<EOT
+USERNAME=$USERNAME; 
+NEW_PASSWORD=$NEW_PASSWORD; 
+DB_NAME=$DB_NAME; 
+POSTGRES_PASSWORD=$POSTGRES_PASSWORD; 
+GATEWAY_IP=$GATEWAY_IP; 
+MANAGER_IP=$MANAGER_IP; 
+MANAGER_NAME=$MANAGER_NAME; 
+PRIMARY_IP=$PRIMARY_IP; 
+PRIMARY_NAME=$PRIMARY_NAME; 
+BACKUP_IP=$BACKUP_IP; 
+BACKUP_NAME=$BACKUP_NAME; 
+STANDBY_IP=$STANDBY_IP; 
+STANDBY_NAME=$STANDBY_NAME; 
+CLUSTER_NAME=$CLUSTER_NAME; 
+$(< $(dirname "$0")/utils/db_setup.sh); 
+$(< $(dirname "$0")/utils/initial_setup.sh); 
+$(< $(dirname "$0")/utils/private_setup.sh); 
+$(< $(dirname "$0")/utils/do_patches.sh);
+$(< $(dirname "$0")/main/build_setup.sh);
+$(< $(dirname "$0")/main/initial_setup.sh); 
+$(< $(dirname "$0")/main/failguard_utils.sh); 
+$(< $(dirname "$0")/main/primary_tooling.sh); 
+$(< $(dirname "$0")/primary_setup.sh);
+EOT
 }
 
 init_backup()
 {
     echo "Backup Setup Started"
-    ssh -q -A -o "StrictHostKeyChecking no" root@${BACKUP_IP} \
-        "USERNAME=$USERNAME; NEW_PASSWORD=$NEW_PASSWORD; GATEWAY_IP=$GATEWAY_IP; PRIMARY_IP=$PRIMARY_IP; PRIMARY_NAME=$PRIMARY_NAME; BACKUP_IP=$BACKUP_IP; BACKUP_NAME=$BACKUP_NAME; STANDBY_IP=$STANDBY_IP; STANDBY_NAME=$STANDBY_NAME; MANAGER_IP=$MANAGER_IP; MANAGER_NAME=$MANAGER_NAME; CLUSTER_NAME=$CLUSTER_NAME; $(< $(dirname "$0")/utils/db_setup.sh); $(< $(dirname "$0")/utils/initial_setup.sh); $(< $(dirname "$0")/utils/private_setup.sh); $(< $(dirname "$0")/utils/do_patches.sh); $(< $(dirname "$0")/main/build_setup.sh); $(< $(dirname "$0")/main/initial_setup.sh); $(< $(dirname "$0")/main/failguard_utils.sh); $(< $(dirname "$0")/main/backup_tooling.sh); $(< $(dirname "$0")/backup_setup.sh);"
+    ssh -q -A -o "StrictHostKeyChecking no" root@${BACKUP_IP} 'bash -s' <<EOT
+USERNAME=$USERNAME; 
+NEW_PASSWORD=$NEW_PASSWORD; 
+GATEWAY_IP=$GATEWAY_IP; 
+PRIMARY_IP=$PRIMARY_IP; 
+PRIMARY_NAME=$PRIMARY_NAME; 
+BACKUP_IP=$BACKUP_IP; 
+BACKUP_NAME=$BACKUP_NAME; 
+STANDBY_IP=$STANDBY_IP; 
+STANDBY_NAME=$STANDBY_NAME; 
+MANAGER_IP=$MANAGER_IP; 
+MANAGER_NAME=$MANAGER_NAME; 
+CLUSTER_NAME=$CLUSTER_NAME; 
+$(< $(dirname "$0")/utils/db_setup.sh); 
+$(< $(dirname "$0")/utils/initial_setup.sh); 
+$(< $(dirname "$0")/utils/private_setup.sh); 
+$(< $(dirname "$0")/utils/do_patches.sh); 
+$(< $(dirname "$0")/main/build_setup.sh); 
+$(< $(dirname "$0")/main/initial_setup.sh); 
+$(< $(dirname "$0")/main/failguard_utils.sh); 
+$(< $(dirname "$0")/main/backup_tooling.sh); 
+$(< $(dirname "$0")/backup_setup.sh);
+EOT
 }
 
 init_standby()
 {
     echo "Standby Setup Started"
-    ssh -q -A -o "StrictHostKeyChecking no" root@${STANDBY_IP} \
-        "USERNAME=$USERNAME; NEW_PASSWORD=$NEW_PASSWORD; DB_NAME=$DB_NAME; POSTGRES_PASSWORD=$POSTGRES_PASSWORD; GATEWAY_IP=$GATEWAY_IP; PRIMARY_IP=$PRIMARY_IP; PRIMARY_NAME=$PRIMARY_NAME; BACKUP_IP=$BACKUP_IP; BACKUP_NAME=$BACKUP_NAME; STANDBY_IP=$STANDBY_IP; STANDBY_NAME=$STANDBY_NAME; MANAGER_IP=$MANAGER_IP; MANAGER_NAME=$MANAGER_NAME; CLUSTER_NAME=$CLUSTER_NAME; REPLICATION_PASSWORD=$REPLICATION_PASSWORD; $(< $(dirname "$0")/utils/db_setup.sh); $(< $(dirname "$0")/utils/initial_setup.sh); $(< $(dirname "$0")/utils/private_setup.sh); $(< $(dirname "$0")/utils/do_patches.sh); $(< $(dirname "$0")/main/build_setup.sh); $(< $(dirname "$0")/main/initial_setup.sh); $(< $(dirname "$0")/main/failguard_utils.sh); $(< $(dirname "$0")/main/standby_tooling.sh); $(< $(dirname "$0")/standby_setup.sh);"
+    ssh -q -A -o "StrictHostKeyChecking no" root@${STANDBY_IP} 'bash -s' <<EOT
+USERNAME=$USERNAME; 
+NEW_PASSWORD=$NEW_PASSWORD; 
+DB_NAME=$DB_NAME; 
+POSTGRES_PASSWORD=$POSTGRES_PASSWORD; 
+GATEWAY_IP=$GATEWAY_IP; 
+PRIMARY_IP=$PRIMARY_IP; 
+PRIMARY_NAME=$PRIMARY_NAME; 
+BACKUP_IP=$BACKUP_IP; 
+BACKUP_NAME=$BACKUP_NAME; 
+STANDBY_IP=$STANDBY_IP; 
+STANDBY_NAME=$STANDBY_NAME; 
+MANAGER_IP=$MANAGER_IP; 
+MANAGER_NAME=$MANAGER_NAME; 
+CLUSTER_NAME=$CLUSTER_NAME; 
+REPLICATION_PASSWORD=$REPLICATION_PASSWORD; 
+$(< $(dirname "$0")/utils/db_setup.sh); 
+$(< $(dirname "$0")/utils/initial_setup.sh); 
+$(< $(dirname "$0")/utils/private_setup.sh); 
+$(< $(dirname "$0")/utils/do_patches.sh); 
+$(< $(dirname "$0")/main/build_setup.sh); 
+$(< $(dirname "$0")/main/initial_setup.sh); 
+$(< $(dirname "$0")/main/failguard_utils.sh); 
+$(< $(dirname "$0")/main/standby_tooling.sh); 
+$(< $(dirname "$0")/standby_setup.sh);
+EOT
 }
 
 setup_backup()
 {
     echo "Backup Second Setup Started"
-    ssh -q -A -o "StrictHostKeyChecking no" root@${BACKUP_IP} \
-        "PRIMARY_NAME=$PRIMARY_NAME; STANDBY_IP=$STANDBY_IP; STANDBY_NAME=$STANDBY_NAME; CLUSTER_NAME=$CLUSTER_NAME; $(< $(dirname "$0")/main/failguard_utils.sh); $(< $(dirname "$0")/main/backup_tooling.sh); $(< $(dirname "$0")/backup_final.sh);"
+    ssh -q -A -o "StrictHostKeyChecking no" root@${BACKUP_IP} 'bash -s' <<EOT
+PRIMARY_NAME=$PRIMARY_NAME; 
+STANDBY_IP=$STANDBY_IP; 
+STANDBY_NAME=$STANDBY_NAME; 
+CLUSTER_NAME=$CLUSTER_NAME; 
+$(< $(dirname "$0")/main/failguard_utils.sh); 
+$(< $(dirname "$0")/main/backup_tooling.sh); 
+$(< $(dirname "$0")/backup_final.sh);
+EOT
 }
 
 setup_primary()
 {
     echo "Primary Second Setup Started"
-    ssh -q -A -o "StrictHostKeyChecking no" root@${PRIMARY_IP} \
-        "BACKUP_IP=$BACKUP_IP; BACKUP_NAME=$BACKUP_NAME; CIPHER_PASSWORD=$CIPHER_PASSWORD; CLUSTER_NAME=$CLUSTER_NAME; STANDBY_IP=$STANDBY_IP; REPLICATION_PASSWORD=$REPLICATION_PASSWORD; $(< $(dirname "$0")/main/failguard_utils.sh); $(< $(dirname "$0")/main/primary_tooling.sh); $(< $(dirname "$0")/primary_final.sh);"
+    ssh -q -A -o "StrictHostKeyChecking no" root@${PRIMARY_IP} 'bash -s' <<EOT
+"BACKUP_IP=$BACKUP_IP; 
+BACKUP_NAME=$BACKUP_NAME; 
+CIPHER_PASSWORD=$CIPHER_PASSWORD; 
+CLUSTER_NAME=$CLUSTER_NAME; 
+STANDBY_IP=$STANDBY_IP; 
+REPLICATION_PASSWORD=$REPLICATION_PASSWORD; 
+$(< $(dirname "$0")/main/failguard_utils.sh); 
+$(< $(dirname "$0")/main/primary_tooling.sh); 
+$(< $(dirname "$0")/primary_final.sh);
+EOT
 }
 
 start_standby()
 {
     echo "Starting Standby"
-    ssh -q -A -o "StrictHostKeyChecking no" root@${STANDBY_IP} \
-        "CLUSTER_NAME=$CLUSTER_NAME; $(< $(dirname "$0")/main/failguard_utils.sh); $(< $(dirname "$0")/standby_start.sh);"
+    ssh -q -A -o "StrictHostKeyChecking no" root@${STANDBY_IP} 'bash -s' <<EOT
+CLUSTER_NAME=$CLUSTER_NAME; 
+$(< $(dirname "$0")/main/failguard_utils.sh); 
+$(< $(dirname "$0")/standby_start.sh);
+EOT
 }
 
 start_backup()
 {
     echo "Starting Backup"
-    ssh -q -A -o "StrictHostKeyChecking no" root@${BACKUP_IP} \
-        "CLUSTER_NAME=$CLUSTER_NAME; $(< $(dirname "$0")/main/failguard_utils.sh); $(< $(dirname "$0")/backup_start.sh);"
+    ssh -q -A -o "StrictHostKeyChecking no" root@${BACKUP_IP} 'bash -s' <<EOT
+CLUSTER_NAME=$CLUSTER_NAME; 
+$(< $(dirname "$0")/main/failguard_utils.sh); 
+$(< $(dirname "$0")/backup_start.sh);
+EOT
 }
 
 finish_manager()
 {
     echo "Finalizing Manager"
-    ssh -q -A -o "StrictHostKeyChecking no" root@${MANAGER_IP} \
-        "CLUSTER_NAME=$CLUSTER_NAME; PRIMARY_IP=$PRIMARY_IP; PRIMARY_NAME=$PRIMARY_NAME; BACKUP_IP=$BACKUP_IP; BACKUP_NAME=$BACKUP_NAME; STANDBY_IP=$STANDBY_IP; STANDBY_NAME=$STANDBY_NAME; MANAGER_IP=$MANAGER_IP; MANAGER_NAME=$MANAGER_NAME; $(< $(dirname "$0")/main/failguard_utils.sh); $(< $(dirname "$0")/main/manager_tooling.sh); $(< $(dirname "$0")/manager_final.sh);"
+    ssh -q -A -o "StrictHostKeyChecking no" root@${MANAGER_IP} 'bash -s' <<EOT
+CLUSTER_NAME=$CLUSTER_NAME; 
+PRIMARY_IP=$PRIMARY_IP; 
+PRIMARY_NAME=$PRIMARY_NAME; 
+BACKUP_IP=$BACKUP_IP; 
+BACKUP_NAME=$BACKUP_NAME; 
+STANDBY_IP=$STANDBY_IP; 
+STANDBY_NAME=$STANDBY_NAME; 
+MANAGER_IP=$MANAGER_IP; 
+MANAGER_NAME=$MANAGER_NAME; 
+$(< $(dirname "$0")/main/failguard_utils.sh); 
+$(< $(dirname "$0")/main/manager_tooling.sh); 
+$(< $(dirname "$0")/manager_final.sh);
+EOT
 }
 
 # Install pgbackrest on each machine
