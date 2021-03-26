@@ -35,7 +35,7 @@ configure_server()
 
     # Configure Firewall for security
     ufw allow ssh
-    ufw enable
+    echo "y" | ufw enable
 
     # Allow the server to be accessible via password if one exists
     sed -i 's/.*PasswordAuthentication.*/PasswordAuthentication yes/g' /etc/ssh/sshd_config

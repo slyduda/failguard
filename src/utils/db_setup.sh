@@ -7,7 +7,7 @@ install_postgres()
     POSTGRES_PASSWORD=$2
 
     # Install dependencies
-    sudo apt install postgresql postgresql-contrib
+    sudo apt install postgresql postgresql-contrib -qq -y
 
     # Creates the database and changes the superuser password
     sudo -i -u postgres psql -c "ALTER USER postgres NEW_PASSWORD '$POSTGRES_PASSWORD';"  # could not change directory to "/root": Permission denied
