@@ -124,7 +124,7 @@ init_manager()
     echo "Manager Setup Started"
     ssh -q -A -o "StrictHostKeyChecking no" root@${MANAGER_IP} 'bash -s' <<EOT
 USERNAME=$USERNAME; 
-NEW_PASSWORD=$NEW_PASSWORD; 
+NEW_PASSWORD="$NEW_PASSWORD"; 
 GATEWAY_IP=$GATEWAY_IP; 
 PRIMARY_IP=$PRIMARY_IP; 
 PRIMARY_NAME=$PRIMARY_NAME; 
@@ -151,7 +151,7 @@ init_primary()
     echo "Primary Setup Started"
     ssh -q -A -o "StrictHostKeyChecking no" root@${PRIMARY_IP} 'bash -s' <<EOT
 USERNAME=$USERNAME; 
-NEW_PASSWORD=$NEW_PASSWORD; 
+NEW_PASSWORD="$NEW_PASSWORD"; 
 DB_NAME=$DB_NAME; 
 POSTGRES_PASSWORD=$POSTGRES_PASSWORD; 
 GATEWAY_IP=$GATEWAY_IP; 
@@ -181,7 +181,7 @@ init_backup()
     echo "Backup Setup Started"
     ssh -q -A -o "StrictHostKeyChecking no" root@${BACKUP_IP} 'bash -s' <<EOT
 USERNAME=$USERNAME; 
-NEW_PASSWORD=$NEW_PASSWORD; 
+NEW_PASSWORD="$NEW_PASSWORD"; 
 GATEWAY_IP=$GATEWAY_IP; 
 PRIMARY_IP=$PRIMARY_IP; 
 PRIMARY_NAME=$PRIMARY_NAME; 
@@ -209,7 +209,7 @@ init_standby()
     echo "Standby Setup Started"
     ssh -q -A -o "StrictHostKeyChecking no" root@${STANDBY_IP} 'bash -s' <<EOT
 USERNAME=$USERNAME; 
-NEW_PASSWORD=$NEW_PASSWORD; 
+NEW_PASSWORD="$NEW_PASSWORD"; 
 DB_NAME=$DB_NAME; 
 POSTGRES_PASSWORD=$POSTGRES_PASSWORD; 
 GATEWAY_IP=$GATEWAY_IP; 
