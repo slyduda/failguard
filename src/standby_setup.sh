@@ -23,13 +23,13 @@ configure_private_droplet $GATEWAY_IP
 configure_server $USERNAME "$NEW_PASSWORD"
 
 # Install postgres and pgbackrest
-install_postgres $DB_NAME $POSTGRES_PASSWORD
+install_postgres $DB_NAME "$POSTGRES_PASSWORD"
 
 # Create pgbackrest config
 create_pgbackrest_config postgres
 create_pgbackrest_repository postgres
 set_replica_streaming_standby_config $PRIMARY_NAME $BACKUP_NAME $CLUSTER_NAME
-configure_replication_password $REPLICATION_PASSWORD
+configure_replication_password "$REPLICATION_PASSWORD"
 
 # Create Hosts and Keys
 create_cluster_hosts $MANAGER_IP $MANAGER_NAME $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME
