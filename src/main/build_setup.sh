@@ -6,11 +6,12 @@ build_pgbackrest() {
         https://github.com/pgbackrest/pgbackrest/archive/release/2.32.tar.gz | \
         tar zx -C /build
     sudo apt-get install make gcc libpq-dev libssl-dev libxml2-dev pkg-config \
-       liblz4-dev libzstd-dev libbz2-dev libz-dev
+       liblz4-dev libzstd-dev libbz2-dev libz-dev -qq -y
     cd /build/pgbackrest-release-2.32/src && ./configure && make
+    cd
 
     # Update and upgrade all packages on the server
-    sudo apt-get install postgresql-client libxml2 install -y
+    sudo apt-get install postgresql-client libxml2 install -qq -y
 }
 
 build_droplet()
