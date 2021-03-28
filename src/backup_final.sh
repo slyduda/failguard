@@ -7,4 +7,4 @@ send_pgbackrest_public_key $STANDBY_IP
 
 # Configure the Backup Server for Standby Backup 
 set_backup_standby_backup_config $PRIMARY_NAME $STANDBY_NAME $CLUSTER_NAME
-# Exit
+# Exit         
