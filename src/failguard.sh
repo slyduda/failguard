@@ -241,10 +241,10 @@ EOT
 }
 
 setup_backup()
-{ond Setup Started"
+{
+    echo "Backup Second Setup Started"
     ssh -q -A -o "StrictHostKeyChecking no" root@${BACKUP_IP} 'bash -s' <<EOT
-PRIMARY_NAME=$PRIMARY_NAM
-    echo "Backup SecE; 
+PRIMARY_NAME=$PRIMARY_NAME; 
 STANDBY_IP=$STANDBY_IP; 
 STANDBY_NAME=$STANDBY_NAME; 
 CLUSTER_NAME=$CLUSTER_NAME; 
