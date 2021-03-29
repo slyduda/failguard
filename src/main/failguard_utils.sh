@@ -42,7 +42,7 @@ fix_ssh_permission()
 {
     USER=$1
     HOME_PATH=$(getent passwd $USER | cut -d: -f6)
-    su - $USER mkdir -m 700 -p $HOME_PATH/.ssh
+    sudo -u $USER mkdir -m 700 -p $HOME_PATH/.ssh
 }
 
 send_pgbackrest_public_key()
@@ -51,8 +51,8 @@ send_pgbackrest_public_key()
     # Copy public key
     (echo -n 'no-agent-forwarding,no-X11-forwarding,no-port-forwarding,' && \
         echo -n 'command="/usr/bin/pgbackrest ${SSH_ORIGINAL_COMMAND#* }" ' && \
-        ssh -q -A -o "StrictHostKeyChecking no" root@$HOST cat /var/lib/postgresql/.ssh/id_rsa.pub) | \
-        su - pgbackrest tee -a /home/pgbackrest/.ssh/authorized_keys
+        ssh root@$HOST cat /var/lib/postgresql/.ssh/id_rsa.pub) | \
+        sudo -u pgbackrest tee -a /home/pgbackrest/.ssh/authorized_keys
 
     # Test connection
     sudo -u pgbackrest ssh -q postgres@$HOST exit
@@ -72,10 +72,10 @@ send_postgres_public_key()
     (echo -n 'no-agent-forwarding,no-X11-forwarding,no-port-forwarding,' && \
         echo -n 'command="/usr/bin/pgbackrest ${SSH_ORIGINAL_COMMAND#* }" ' && \
         ssh root@$HOST cat /home/pgbackrest/.ssh/id_rsa.pub) | \
-        su - postgres tee -a /var/lib/postgresql/.ssh/authorized_keys
+        sudo -u postgres tee -a /var/lib/postgresql/.ssh/authorized_keys
 
     # Test connection
-    su - postgres ssh -q pgbackrest@$HOST exit
+    sudo -u postgres ssh -q pgbackrest@$HOST exit
     if [ $? -ne 0 ]; then
         echo "Connection to $HOST failed."
         exit
