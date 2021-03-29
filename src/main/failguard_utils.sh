@@ -51,7 +51,7 @@ send_pgbackrest_public_key()
     # Copy public key
     (echo -n 'no-agent-forwarding,no-X11-forwarding,no-port-forwarding,' && \
         echo -n 'command="/usr/bin/pgbackrest ${SSH_ORIGINAL_COMMAND#* }" ' && \
-        sudo ssh -q -A -o "StrictHostKeyChecking no" root@$HOST cat /var/lib/postgresql/.ssh/id_rsa.pub) | \
+        ssh -q -A -o "StrictHostKeyChecking no" root@$HOST cat /var/lib/postgresql/.ssh/id_rsa.pub) | \
         sudo -u pgbackrest tee -a /home/pgbackrest/.ssh/authorized_keys
 
     # Test connection
@@ -71,7 +71,7 @@ send_postgres_public_key()
     # Copy public key
     (echo -n 'no-agent-forwarding,no-X11-forwarding,no-port-forwarding,' && \
         echo -n 'command="/usr/bin/pgbackrest ${SSH_ORIGINAL_COMMAND#* }" ' && \
-        sudo ssh -q -A -o "StrictHostKeyChecking no" root@$HOST cat /home/pgbackrest/.ssh/id_rsa.pub) | \
+        ssh -q -A -o "StrictHostKeyChecking no" root@$HOST cat /home/pgbackrest/.ssh/id_rsa.pub) | \
         sudo -u postgres tee -a /var/lib/postgresql/.ssh/authorized_keys
 
     # Test connection
@@ -91,7 +91,7 @@ send_manager_public_key()
     # Copy public key
     (echo -n 'no-agent-forwarding,no-X11-forwarding,no-port-forwarding,' && \
         echo -n 'command="/usr/bin/pgbackrest ${SSH_ORIGINAL_COMMAND#* }" ' && \
-        ssh root@$HOST cat /root/.ssh/id_rsa.pub) | \
+        root@$HOST cat /root/.ssh/id_rsa.pub) | \
         HOME_PATH=$(getent passwd $USER | cut -d: -f6) | \
         tee -a $HOME_PATH/.ssh/authorized_keys
 
