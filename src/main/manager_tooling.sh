@@ -4,7 +4,7 @@ create_manager_tables()
     # Create Table Clusters (ID, Name)
     sudo -i -u postgres psql -c "CREATE TABLE clusters(id serial PRIMARY KEY, name VARCHAR ( 50 ) UNIQUE NOT NULL);"
     # Create Table Servers (ID, IP, Names, Cluster_ID)
-    sudo -i -u postgres psql -c "CREATE TABLE servers(id serial PRIMARY KEY, ip VARCHAR ( 16 ) UNIQUE NOT NULL, name VARCHAR ( 50 ) UNIQUE NOT NULL, type VARCHAR (1) NOT NULL, CONSTRAINT fk_cluster_id FOREIGN KEY(cluster_id) REFERENCES clusters(id)); "
+    sudo -i -u postgres psql -c "CREATE TABLE servers(id serial PRIMARY KEY, ip VARCHAR ( 16 ) UNIQUE NOT NULL, name VARCHAR ( 50 ) UNIQUE NOT NULL, type VARCHAR (1) NOT NULL, cluster_id INT, CONSTRAINT fk_cluster_id FOREIGN KEY(cluster_id) REFERENCES clusters(id)); "
 }
 
 insert_failguard_server()

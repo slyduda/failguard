@@ -53,11 +53,12 @@ if [ -f $(dirname "$0")/config.prod.json ]; then
     USERNAME=$( jq -r ".server.username" $(dirname "$0")/config.prod.json )
     NEW_PASSWORD=$( jq -r ".server.password" $(dirname "$0")/config.prod.json )
 
-    CLUSTER_NAME=$( jq -r ".database.cluster_name" $(dirname "$0")/config.prod.json )
     DB_NAME=$(  jq -r ".database.name" $(dirname "$0")/config.prod.json )
+    CLUSTER_NAME=$( jq -r ".database.cluster_name" $(dirname "$0")/config.prod.json )
     POSTGRES_MANAGER_PASSWORD=$( jq -r ".database.password" $(dirname "$0")/config.prod.json )
     POSTGRES_PASSWORD=$( jq -r ".database.manager_password" $(dirname "$0")/config.prod.json )
     REPLICATION_PASSWORD=$( jq -r ".database.replication_password" $(dirname "$0")/config.prod.json )   
+    
     MANAGER_IP=$( jq -r ".server.instances.manager.ip" $(dirname "$0")/config.prod.json )
     PRIMARY_IP=$( jq -r ".server.instances.primary.ip" $(dirname "$0")/config.prod.json )
     STANDBY_IP=$( jq -r ".server.instances.standby[0].ip" $(dirname "$0")/config.prod.json )

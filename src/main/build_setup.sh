@@ -174,7 +174,7 @@ build_droplets()
 install_pgbackrest()
 {
     REMOTE_HOST=$1
-    scp -o "ForwardAgent yes" /build/pgbackrest-release-2.32/src/pgbackrest $REMOTE_HOST:/usr/bin
+    scp -o "ForwardAgent yes" -o "StrictHostKeyChecking no" /build/pgbackrest-release-2.32/src/pgbackrest $REMOTE_HOST:/usr/bin
 }
 
 self_destruct()
