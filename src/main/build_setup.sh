@@ -66,8 +66,8 @@ build_droplets()
     # Later we can do it without regions
     BACKUP_NAME="db-backup.${DOMAIN}"
     MANAGER_NAME="db-manager.$DOMAIN"
-    PRIMARY_NAME="db-${DB_NAME}.${DOMAIN}"
-    STANDBY_NAME="db-${DB_NAME}-${UNIQUEID}.${DOMAIN}"
+    PRIMARY_NAME="db-${SERVER_NAME}.${DOMAIN}"
+    STANDBY_NAME="db-${SERVER_NAME}-${UNIQUEID}.${DOMAIN}"
     
     BACKUP_ID=0 
     MANAGER_ID=0
