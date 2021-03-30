@@ -55,7 +55,7 @@ send_pgbackrest_public_key()
         sudo -u pgbackrest tee -a /home/pgbackrest/.ssh/authorized_keys
 
     # Test connection
-    sudo -u pgbackrest ssh -q -A -o "StrictHostKeyChecking no" -q postgres@$HOST exit
+    ( sudo -u pgbackrest ssh -q -A -o "StrictHostKeyChecking no" -q postgres@$HOST ) | exit
     if [ $? -ne 0 ]; then
         echo "Connection to $HOST failed."
         exit
@@ -75,7 +75,7 @@ send_postgres_public_key()
         sudo -u postgres tee -a /var/lib/postgresql/.ssh/authorized_keys
 
     # Test connection
-    sudo -u postgres ssh -q -A -o "StrictHostKeyChecking no" -q pgbackrest@$HOST exit
+    ( sudo -u postgres ssh -q -A -o "StrictHostKeyChecking no" -q pgbackrest@$HOST ) | exit
     if [ $? -ne 0 ]; then
         echo "Connection to $HOST failed."
         exit
