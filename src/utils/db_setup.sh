@@ -11,6 +11,7 @@ setup_postgres()
 
     DB_NAME=$1
     POSTGRES_PASSWORD=$2
+    CLUSTER_NAME=$3
 
     # Creates the database and changes the superuser password
     sudo -i -u postgres psql -c "ALTER USER postgres PASSWORD '$POSTGRES_PASSWORD';"  # could not change directory to "/root": Permission denied

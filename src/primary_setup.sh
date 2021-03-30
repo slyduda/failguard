@@ -24,12 +24,12 @@ configure_server $USERNAME "$NEW_PASSWORD"
 
 # Install postgres and pgbackrest
 install_postgres
-setup_postgres $DB_NAME "$POSTGRES_PASSWORD"
+create_cluster $CLUSTER_NAME
+setup_postgres $DB_NAME "$POSTGRES_PASSWORD" $CLUSTER_NAME
 
 # Create pgbackrest config
 create_pgbackrest_config postgres
 create_pgbackrest_repository postgres
-create_cluster $CLUSTER_NAME
 set_archiving_primary_config $CLUSTER_NAME
 
 # Create Hosts and Keys
