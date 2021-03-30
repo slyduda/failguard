@@ -28,6 +28,7 @@ create_ssh_keys postgres
 
 # Install postgres NO NEED TO REPLICATE THE DB THE START SCRIPT WILL DO THIS
 install_postgres
+create_cluster $CLUSTER_NAME # Creating the cluster on standby JUST IN CASE
 
 # Create pgbackrest config
 create_pgbackrest_config postgres
