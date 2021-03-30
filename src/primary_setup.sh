@@ -24,7 +24,9 @@ configure_server $USERNAME "$NEW_PASSWORD"
 
 # Install postgres and pgbackrest
 install_postgres
+stop_cluster main
 create_cluster $CLUSTER_NAME
+start_cluster $CLUSTER_NAME
 setup_postgres $DB_NAME "$POSTGRES_PASSWORD" $CLUSTER_NAME
 
 # Create pgbackrest config

@@ -34,6 +34,7 @@ create_ssh_keys pgbackrest
 
 # Install postgres
 install_postgres
+stop_cluster main
 
 # Share Backup Key with Primary 
 send_pgbackrest_public_key $PRIMARY_IP
