@@ -29,6 +29,7 @@ setup_postgres $DB_NAME "$POSTGRES_PASSWORD"
 # Create pgbackrest config
 create_pgbackrest_config postgres
 create_pgbackrest_repository postgres
+create_cluster $CLUSTER_NAME
 set_archiving_primary_config $CLUSTER_NAME
 
 # Create Hosts and Keys
