@@ -7,7 +7,7 @@ set_local_repository_primary_config()
 
     > /etc/pgbackrest/pgbackrest.conf
     echo "[$CLUSTER_NAME]
-pg1-path=/var/lib/postgresql/12/main
+pg1-path=/var/lib/postgresql/12/$CLUSTER_NAME
 
 [global]
 repo1-cipher-pass=$CIPHER_PASSWORD
@@ -22,12 +22,12 @@ compress-level=3" >> /etc/pgbackrest/pgbackrest.conf
 set_archiving_primary_config() 
 {
     CLUSTER_NAME=$1
-    sed -i "s/.*archive_command.*/archive_command = 'pgbackrest --stanza=$CLUSTER_NAME archive-push %p'/g" /etc/postgresql/12/main/postgresql.conf
-    sed -i "s/.*archive_mode.*/archive_mode = on/g" /etc/postgresql/12/main/postgresql.conf
-    sed -i "s/.*listen_addresses.*/listen_addresses = '*'/g" /etc/postgresql/12/main/postgresql.conf
-    sed -i "s/.*log_line_prefix.*/log_line_prefix = ''/g" /etc/postgresql/12/main/postgresql.conf
-    sed -i "s/.*max_wal_senders.*/max_wal_senders = 3/g" /etc/postgresql/12/main/postgresql.conf
-    sed -i "s/.*wal_level.*/wal_level = replica/g" /etc/postgresql/12/main/postgresql.conf
+    sed -i "s/.*archive_command.*/archive_command = 'pgbackrest --stanza=$CLUSTER_NAME archive-push %p'/g" /etc/postgresql/12/$CLUSTER_NAME/postgresql.conf
+    sed -i "s/.*archive_mode.*/archive_mode = on/g" /etc/postgresql/12/$CLUSTER_NAME/postgresql.conf
+    sed -i "s/.*listen_addresses.*/listen_addresses = '*'/g" /etc/postgresql/12/$CLUSTER_NAME/postgresql.conf
+    sed -i "s/.*log_line_prefix.*/log_line_prefix = ''/g" /etc/postgresql/12/$CLUSTER_NAME/postgresql.conf
+    sed -i "s/.*max_wal_senders.*/max_wal_senders = 3/g" /etc/postgresql/12/$CLUSTER_NAME/postgresql.conf
+    sed -i "s/.*wal_level.*/wal_level = replica/g" /etc/postgresql/12/$CLUSTER_NAME/postgresql.conf
 }
 
 # SKIP THESE IF RUNNING DEDICATED BACKUP SERVER
@@ -61,7 +61,7 @@ set_backup_standby_primary_config()
 
     > /etc/pgbackrest/pgbackrest.conf
     echo "[$CLUSTER_NAME]
-pg1-path=/var/lib/postgresql/12/main
+pg1-path=/var/lib/postgresql/12/$CLUSTER_NAME
 
 [global]
 repo1-host=$BACKUP_HOST

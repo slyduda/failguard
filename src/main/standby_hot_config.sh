@@ -21,16 +21,16 @@ sudo -u postgres cat /var/lib/postgresql/12/demo/postgresql.auto.conf
 
 
 # Configure PostgreSQL
-sed -i "s/#archive_command.*/archive_command = 'pgbackrest --stanza=$clusterName archive-push %p'/g" /etc/postgresql/12/main/postgresql.conf
-sed -i "s/#archive_mode.*/archive_mode = on/g" /etc/postgresql/12/main/postgresql.conf
-sed -i "s/#hot_standby.*/hot_standby = on/g" /etc/postgresql/12/main/postgresql.conf
-sed -i "s/#log_filename.*/log_filename = 'postgresql.log'/g" /etc/postgresql/12/main/postgresql.conf
-sed -i "s/#log_line_prefix.*/log_line_prefix = ''/g" /etc/postgresql/12/main/postgresql.conf
-sed -i "s/#max_wal_senders.*/max_wal_senders = 3/g" /etc/postgresql/12/main/postgresql.conf
-sed -i "s/#wal_level.*/wal_level = replica/g" /etc/postgresql/12/main/postgresql.conf
+sed -i "s/#archive_command.*/archive_command = 'pgbackrest --stanza=$clusterName archive-push %p'/g" /etc/postgresql/12/$CLUSTER_NAME/postgresql.conf
+sed -i "s/#archive_mode.*/archive_mode = on/g" /etc/postgresql/12/$CLUSTER_NAME/postgresql.conf
+sed -i "s/#hot_standby.*/hot_standby = on/g" /etc/postgresql/12/$CLUSTER_NAME/postgresql.conf
+sed -i "s/#log_filename.*/log_filename = 'postgresql.log'/g" /etc/postgresql/12/$CLUSTER_NAME/postgresql.conf
+sed -i "s/#log_line_prefix.*/log_line_prefix = ''/g" /etc/postgresql/12/$CLUSTER_NAME/postgresql.conf
+sed -i "s/#max_wal_senders.*/max_wal_senders = 3/g" /etc/postgresql/12/$CLUSTER_NAME/postgresql.conf
+sed -i "s/#wal_level.*/wal_level = replica/g" /etc/postgresql/12/$CLUSTER_NAME/postgresql.conf
 
 # Probably should add all addresses if private
-# sed -i "s/#listen_addresses.*/listen_addresses = '*'/g" /etc/postgresql/12/main/postgresql.conf
+# sed -i "s/#listen_addresses.*/listen_addresses = '*'/g" /etc/postgresql/12/$CLUSTER_NAME/postgresql.conf
 
 # Start PostgreSQL
 sudo pg_ctlcluster 12 $clusterName start

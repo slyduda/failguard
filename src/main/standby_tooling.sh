@@ -16,7 +16,7 @@ set_replica_streaming_standby_config()
        
        > /etc/pgbackrest/pgbackrest.conf
        echo "[$CLUSTER_NAME]
-pg1-path=/var/lib/postgresql/12/main
+pg1-path=/var/lib/postgresql/12/$CLUSTER_NAME
 recovery-option=primary_conninfo=host=pg-primary port=5432 user=replicator
 
 [global]
@@ -25,7 +25,7 @@ repo1-host=$BACKUP_NAME" >> /etc/pgbackrest/pgbackrest.conf
 
        # sudo pg_ctlcluster 12 $CLUSTER_NAME stop
        # sudo -u postgres pgbackrest --stanza=$CLUSTER_NAME --delta --type=standby restore
-       # sudo -u postgres cat /var/lib/postgresql/12/main/postgresql.auto.conf
+       # sudo -u postgres cat /var/lib/postgresql/12/$CLUSTER_NAME/postgresql.auto.conf
 
        # Start PostgreSQL
        # sudo pg_ctlcluster 12 $CLUSTER_NAME start

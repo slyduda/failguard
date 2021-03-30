@@ -11,12 +11,12 @@ set_backup_config()
 {
     # Configure pg1-host/pg1-host-user and pg1-path
     PRIMARY_NAME=$1
-    CLUSTER_NAME=$3
+    CLUSTER_NAME=$2
 
     > /etc/pgbackrest/pgbackrest.conf
     echo "[$CLUSTER_NAME]
 pg1-host=$PRIMARY_NAME
-pg1-path=/var/lib/postgresql/12/main
+pg1-path=/var/lib/postgresql/12/$CLUSTER_NAME
 
 [global]
 repo1-path=/var/lib/pgbackrest
@@ -36,9 +36,9 @@ set_backup_standby_backup_config()
     > /etc/pgbackrest/pgbackrest.conf
     echo "[$CLUSTER_NAME]
 pg1-host=$PRIMARY_NAME
-pg1-path=/var/lib/postgresql/12/main
+pg1-path=/var/lib/postgresql/12/$CLUSTER_NAME
 pg2-host=$STANDBY_NAME
-pg2-path=/var/lib/postgresql/12/main
+pg2-path=/var/lib/postgresql/12/$CLUSTER_NAME
 
 [global]
 backup-standby=y

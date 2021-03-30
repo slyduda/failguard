@@ -1,8 +1,32 @@
 
+create_cluster()
+{
+    CLUSTER_NAME=$1
+    sudo pg_createcluster 12 $CLUSTER_NAME -p 5432
+}
+
+create_stanza()
+{
+    CLUSTER_NAME=$1
+    sudo -u pgbackrest pgbackrest --stanza=$CLUSTER_NAME --log-level-console=info stanza-create
+}
+
+update_standby_stanza()
+{
+    CLUSTER_NAME=$1
+    sudo -u postgres pgbackrest --stanza=$CLUSTER_NAME --delta --type=standby --log-level-console=info restore
+}
+
 restart_cluster()
 {
     CLUSTER_NAME=$1
     sudo pg_ctlcluster 12 $CLUSTER_NAME restart # Specified cluster does not exist
+}
+
+stop_cluster()
+{
+    CLUSTER_NAME=$1
+    sudo pg_ctlcluster 12 $CLUSTER_NAME stop
 }
 
 stop_and_restore_cluster()

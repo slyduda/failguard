@@ -271,6 +271,16 @@ $(< $(dirname "$0")/primary_final.sh);
 EOT
 }
 
+start_primary()
+{
+    echo "Starting Primary"
+    ssh -q -A -o "StrictHostKeyChecking no" root@${PRIMARY_IP} 'bash -s' <<EOT
+CLUSTER_NAME=$CLUSTER_NAME; 
+$(< $(dirname "$0")/main/failguard_utils.sh); 
+$(< $(dirname "$0")/primary_start.sh);
+EOT
+}
+
 start_standby()
 {
     echo "Starting Standby"
@@ -323,8 +333,9 @@ else
     init_standby
     setup_backup
     setup_primary
-    # start_standby
-    # start_backup
+    start_primary
+    start_standby
+    start_backup
     finish_manager
     self_destruct
 fi
