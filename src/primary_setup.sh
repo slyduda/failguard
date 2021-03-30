@@ -23,7 +23,8 @@ configure_private_droplet $GATEWAY_IP
 configure_server $USERNAME "$NEW_PASSWORD"
 
 # Install postgres and pgbackrest
-install_postgres $DB_NAME "$POSTGRES_PASSWORD"
+install_postgres
+setup_postgres $DB_NAME "$POSTGRES_PASSWORD"
 
 # Create pgbackrest config
 create_pgbackrest_config postgres

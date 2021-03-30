@@ -27,5 +27,6 @@ create_ssh_keys root
 fix_ssh_permission root
 
 # Install postgres and add tables
-install_postgres failguard "$POSTGRES_PASSWORD"
+install_postgres
+setup_postgres failguard "$POSTGRES_PASSWORD"
 create_manager_tables

@@ -32,5 +32,8 @@ set_backup_config $PRIMARY_NAME $CLUSTER_NAME
 create_cluster_hosts $MANAGER_IP $MANAGER_NAME $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME 
 create_ssh_keys pgbackrest
 
+# Install postgres
+install_postgres
+
 # Share Backup Key with Primary 
 send_pgbackrest_public_key $PRIMARY_IP
