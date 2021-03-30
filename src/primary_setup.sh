@@ -19,22 +19,28 @@ sudo apt-get update -qq -y
 # sudo apt-get upgrade -qq -y
 
 # Initial Config
+echo "Initial Server Config"
 configure_private_droplet $GATEWAY_IP
 configure_server $USERNAME "$NEW_PASSWORD"
 
 # Install postgres and pgbackrest
+echo "Install Postgres"
 install_postgres
+
+echo "Creating $CLUSTER_NAME"
 stop_cluster main
 create_cluster $CLUSTER_NAME
 start_cluster $CLUSTER_NAME
 setup_postgres $DB_NAME "$POSTGRES_PASSWORD" $CLUSTER_NAME
 
 # Create pgbackrest config
+echo "Creating pgbackrest config"
 create_pgbackrest_config postgres
 create_pgbackrest_repository postgres
 set_archiving_primary_config $CLUSTER_NAME
 
 # Create Hosts and Keys
+echo "Creating keys"
 create_cluster_hosts $MANAGER_IP $MANAGER_NAME $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME 
 create_ssh_keys postgres
 

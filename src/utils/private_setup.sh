@@ -7,7 +7,7 @@
 configure_private_droplet()
 {
     privateGatewayIp=$1
-    apt install net-tools -qq -y
+    apt -qq -y install net-tools 
     route -n
 
     # Add gateway IP to the private routing endpoint.
