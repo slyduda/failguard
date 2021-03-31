@@ -2,6 +2,7 @@
 create_cluster()
 {
     CLUSTER_NAME=$1
+    echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@${CLUSTER_NAME}@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
     sudo pg_createcluster 12 $CLUSTER_NAME -p 5432
 }
 

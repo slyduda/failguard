@@ -305,18 +305,18 @@ finish_manager()
 {
     echo "Finalizing Manager"
     ssh -q -A -o "StrictHostKeyChecking no" root@${MANAGER_IP} 'bash -s' <<EOT
-CLUSTER_NAME=$CLUSTER_NAME; 
-PRIMARY_IP=$PRIMARY_IP; 
-PRIMARY_NAME=$PRIMARY_NAME; 
-BACKUP_IP=$BACKUP_IP; 
-BACKUP_NAME=$BACKUP_NAME; 
-STANDBY_IP=$STANDBY_IP; 
-STANDBY_NAME=$STANDBY_NAME; 
-MANAGER_IP=$MANAGER_IP; 
-MANAGER_NAME=$MANAGER_NAME; 
+CLUSTER_NAME=$CLUSTER_NAME;
+PRIMARY_IP=$PRIMARY_IP;
+PRIMARY_NAME=$PRIMARY_NAME;
+BACKUP_IP=$BACKUP_IP;
+BACKUP_NAME=$BACKUP_NAME;
+STANDBY_IP=$STANDBY_IP;
+STANDBY_NAME=$STANDBY_NAME;
+MANAGER_IP=$MANAGER_IP;
+MANAGER_NAME=$MANAGER_NAME;
 $(< $(dirname "$0")/main/failguard_utils.sh); 
 $(< $(dirname "$0")/main/manager_tooling.sh); 
-$(< $(dirname "$0")/manager_final.sh);
+$(< $(dirname "$0")/manager_setup.sh);
 EOT
 }
 
