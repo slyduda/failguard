@@ -46,10 +46,10 @@ set_replica_streaming_primary_config()
     cluster_name=$3
 
     #  Create replication user
-    sudo -u postgres psql -c "create user replicator password '$replication_password' replication";
+    sudo -u postgres psql -c "create user replicator password '$replication_password' replication;"
 
     # Create pg_hba.conf entry for replication user
-    sudo -u postgres sh -c 'echo "host    replication     replicator      '$standby_ip'/32           md5" >> /etc/postgresql/12/'$cluster_name'/pg_hba.conf'
+    sudo -u postgres sh -c 'echo "host    replication     replicator      '"'$standby_ip'"'/32           md5" >> /etc/postgresql/12/'"'$cluster_name'"'/pg_hba.conf'
 }
 
 set_backup_standby_primary_config()

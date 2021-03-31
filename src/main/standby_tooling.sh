@@ -44,7 +44,7 @@ configure_replication_password()
 
        # Configure the replication password in the .pgpass file.
        sudo -u postgres sh -c 'echo \
-              "'$primary_name':*:replication:replicator:'$replication_password'" \
+              "'"'$primary_name'"':*:replication:replicator:'"'$replication_password'"'" \
               >> /var/lib/postgresql/.pgpass'
 
        sudo -u postgres chmod 600 /var/lib/postgresql/.pgpass
