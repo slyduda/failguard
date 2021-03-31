@@ -2,15 +2,6 @@
 
 create_cluster_hosts() 
 {
-    MANAGER_IP=$1
-    MANAGER_NAME=$2
-    PRIMARY_IP=$3
-    PRIMARY_NAME=$4
-    BACKUP_IP=$5
-    BACKUP_NAME=$6
-    STANDBY_IP=$7 # Change this to an array of IPs later
-    STANDBY_NAME=$8 # Change this to an array of IPs later
-
     # Add hard coded variables to file
     echo "# ------ FAILGUARD ------- #" >> /etc/cloud/templates/hosts.debian.tmpl
     echo "# Failguard Manager Host - FGMH" >> /etc/cloud/templates/hosts.debian.tmpl

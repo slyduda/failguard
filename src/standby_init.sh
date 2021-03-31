@@ -37,7 +37,7 @@ setup_postgres $DB_NAME "$POSTGRES_PASSWORD" $CLUSTER_NAME
 create_pgbackrest_config postgres
 create_pgbackrest_repository postgres
 set_replica_streaming_standby_config $PRIMARY_NAME $BACKUP_NAME $CLUSTER_NAME
-configure_replication_password "$REPLICATION_PASSWORD"
+configure_replication_password $PRIMARY_NAME "$REPLICATION_PASSWORD"
 
 # Create Hosts and Keys
 create_cluster_hosts $MANAGER_IP $MANAGER_NAME $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME

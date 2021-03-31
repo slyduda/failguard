@@ -10,18 +10,18 @@
 
 set_replica_streaming_standby_config()
 {
-       PRIMARY_NAME=$1
-       BACKUP_NAME=$2
-       CLUSTER_NAME=$3
+       primary_name=$1
+       backup_name=$2
+       cluster_name=$3
        
        > /etc/pgbackrest/pgbackrest.conf
-       echo "[$CLUSTER_NAME]
-pg1-path=/var/lib/postgresql/12/$CLUSTER_NAME
-recovery-option=primary_conninfo=host=pg-primary port=5432 user=replicator
+       echo "[$cluster_name]
+pg1-path=/var/lib/postgresql/12/$cluster_name
+recovery-option=primary_conninfo=host=$primary_name port=5432 user=replicator
 
 [global]
 log-level-file=detail
-repo1-host=$BACKUP_NAME" >> /etc/pgbackrest/pgbackrest.conf
+repo1-host=$backup_name" >> /etc/pgbackrest/pgbackrest.conf
 
        # sudo pg_ctlcluster 12 $CLUSTER_NAME stop
        # sudo -u postgres pgbackrest --stanza=$CLUSTER_NAME --delta --type=standby restore
@@ -39,10 +39,12 @@ repo1-host=$BACKUP_NAME" >> /etc/pgbackrest/pgbackrest.conf
 
 configure_replication_password()
 {
-       REPLICATION_PASSWORD=$1
+       primary_name=$1
+       replication_password=$2
+
        # Configure the replication password in the .pgpass file.
        sudo -u postgres sh -c 'echo \
-              "$PRIMARY_NAME:*:replication:replicator:$REPLICATION_PASSWORD" \
+              "'$primary_name':*:replication:replicator:'$replication_password'" \
               >> /var/lib/postgresql/.pgpass'
 
        sudo -u postgres chmod 600 /var/lib/postgresql/.pgpass

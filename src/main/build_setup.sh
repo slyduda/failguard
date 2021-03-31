@@ -16,8 +16,8 @@ build_pgbackrest() {
 
 build_droplet()
 {
-    NEW_HOST_NAME=$1
-    new_droplet=$(curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer "${BEARER_TOKEN}"" -d '{"name":"'"${NEW_HOST_NAME}"'","region":"'"${REGION}"'","size":"s-1vcpu-1gb","image":"ubuntu-20-04-x64","ssh_keys":['"${SSH_KEY_ID}"'],"backups":false,"ipv6":true,"vpc_uuid":"'"${VPC_ID}"'"}' "https://api.digitalocean.com/v2/droplets")
+    new_host_name=$1
+    new_droplet=$(curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer "${BEARER_TOKEN}"" -d '{"name":"'"${new_host_name}"'","region":"'"${REGION}"'","size":"s-1vcpu-1gb","image":"ubuntu-20-04-x64","ssh_keys":['"${SSH_KEY_ID}"'],"backups":false,"ipv6":true,"vpc_uuid":"'"${VPC_ID}"'"}' "https://api.digitalocean.com/v2/droplets")
     new_droplet_id=$(echo $new_droplet | jq -r ".droplet.id")
     echo $new_droplet_id
 }
@@ -34,10 +34,10 @@ get_droplet_private_ip()
         new_droplet_ip=$(echo $new_droplet_details | jq -r ".droplet.networks.v4[1].ip_address // empty")
     done
 
-    ssh-keyscan $new_droplet_ip 2>&1 | grep -v "^$" > /dev/null
+    ssh-keyscan ${new_droplet_ip} 2>&1 | grep -v "^$" > /dev/null
     while [ $? != 0 ] ; do
         sleep 5
-        ssh-keyscan $new_droplet_ip 2>&1 | grep -v "^$" > /dev/null
+        ssh-keyscan ${new_droplet_ip} 2>&1 | grep -v "^$" > /dev/null
     done
 
     NEW_DROPLET_IP=$(ssh -q -A -o "StrictHostKeyChecking no" root@${new_droplet_ip} 'MANAGER_IP=$(curl -w "\n" http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address); echo $MANAGER_IP')

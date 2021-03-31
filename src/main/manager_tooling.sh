@@ -19,6 +19,6 @@ insert_failguard_server()
 insert_failguard_cluster()
 {
     # Insert Cluster
-    CLUSTER_NAME=$1
-    sudo -i -u postgres psql -c "INSERT INTO clusters(name) VALUES ('$CLUSTER_NAME');"    
+    cluster_name=$1
+    sudo -i -u postgres psql -c "INSERT INTO clusters(name) VALUES ('$cluster_name');"    
 }

@@ -5,20 +5,20 @@
 
 configure_server()
 {
-    USERNAME=$1
-    NEW_PASSWORD=$2
+    username=$1
+    new_password=$2
 
     add_a_user()
     {
 
         if [ $(id -u) -eq 0 ]; then
-            egrep "^$USERNAME" /etc/passwd >/dev/null
+            egrep "^$username" /etc/passwd >/dev/null
             if [ $? -eq 0 ]; then
-                echo "$USERNAME exists!"
+                echo "$username exists!"
                 exit 1
             else
-                pass=$(perl -e 'print crypt($ARGV[0], "password")' "$NEW_PASSWORD")
-                useradd -m -p "$pass" "$USERNAME" -s /bin/bash -d /home/$USERNAME
+                pass=$(perl -e 'print crypt($ARGV[0], "password")' "$new_password")
+                useradd -m -p "$pass" "$username" -s /bin/bash -d /home/$username
                 [ $? -eq 0 ] && echo "User has been added to system!" || echo "Failed to add a user!"
             fi
         else
@@ -31,7 +31,7 @@ configure_server()
     add_a_user
 
     # Give the user sudo permissions
-    usermod -aG sudo $USERNAME
+    usermod -aG sudo $username
 
     # Configure Firewall for security
     ufw allow ssh
