@@ -8,7 +8,8 @@ create_cluster()
 create_stanza()
 {
     CLUSTER_NAME=$1
-    sudo -u pgbackrest pgbackrest --stanza=$CLUSTER_NAME --log-level-console=info stanza-create
+    USER=$2
+    sudo -u $USER pgbackrest --stanza=$CLUSTER_NAME --log-level-console=info stanza-create
 }
 
 update_standby_stanza()

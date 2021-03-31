@@ -7,7 +7,7 @@
 # source $(dirname "$0")/main/initial_setup.sh
 # source $(dirname "$0")/main/failguard_utils.sh 
 # source $(dirname "$0")/main/build_setup.sh
-# source $(dirname "$0")/main/standby_tooling.sh
+# source $(dirname "$0")/main/backup_tooling.sh
 
 EXTERNAL_HOSTNAME=$(hostname)
 echo "Securely Logged into: "$EXTERNAL_HOSTNAME
@@ -22,22 +22,19 @@ sudo apt-get update -qq -y
 configure_private_droplet $GATEWAY_IP
 configure_server $USERNAME "$NEW_PASSWORD"
 
-# Install postgres NO NEED TO REPLICATE THE DB THE START SCRIPT WILL DO THIS
-install_postgres
-stop_cluster main
-create_cluster $CLUSTER_NAME
-start_cluster $CLUSTER_NAME
-ufw allow 5432
-
 # Create pgbackrest config
-create_pgbackrest_config postgres
-create_pgbackrest_repository postgres
-set_replica_streaming_standby_config $PRIMARY_NAME $BACKUP_NAME $CLUSTER_NAME
-configure_replication_password "$REPLICATION_PASSWORD"
+create_pgbackrest_user
+create_pgbackrest_config pgbackrest
+create_pgbackrest_repository pgbackrest
+set_backup_config $PRIMARY_NAME $CLUSTER_NAME
 
 # Create Hosts and Keys
-create_cluster_hosts $MANAGER_IP $MANAGER_NAME $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME
-create_ssh_keys postgres
+create_cluster_hosts $MANAGER_IP $MANAGER_NAME $PRIMARY_IP $PRIMARY_NAME $BACKUP_IP $BACKUP_NAME $STANDBY_IP $STANDBY_NAME 
+create_ssh_keys pgbackrest
 
-# Share Standby Key with Backup 
-send_postgres_public_key $BACKUP_IP
+# Install postgres
+install_postgres
+stop_cluster main
+
+# Share Backup Key with Primary 
+send_pgbackrest_public_key $PRIMARY_IP

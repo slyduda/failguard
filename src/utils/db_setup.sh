@@ -3,7 +3,7 @@
 install_postgres()
 {
     # Install dependencies
-    sudo apt -qq -y install postgresql postgresql-contrib 
+    sudo apt install -qq -y postgresql postgresql-contrib 
 }
 
 setup_postgres()

@@ -146,7 +146,7 @@ $(< $(dirname "$0")/utils/do_patches.sh);
 $(< $(dirname "$0")/main/initial_setup.sh); 
 $(< $(dirname "$0")/main/failguard_utils.sh); 
 $(< $(dirname "$0")/main/manager_tooling.sh); 
-$(< $(dirname "$0")/manager_setup.sh);
+$(< $(dirname "$0")/manager_init.sh);
 EOT
 }
 
@@ -177,7 +177,7 @@ $(< $(dirname "$0")/main/build_setup.sh);
 $(< $(dirname "$0")/main/initial_setup.sh); 
 $(< $(dirname "$0")/main/failguard_utils.sh); 
 $(< $(dirname "$0")/main/primary_tooling.sh); 
-$(< $(dirname "$0")/primary_setup.sh);
+$(< $(dirname "$0")/primary_init.sh);
 EOT
 }
 
@@ -205,7 +205,7 @@ $(< $(dirname "$0")/main/build_setup.sh);
 $(< $(dirname "$0")/main/initial_setup.sh); 
 $(< $(dirname "$0")/main/failguard_utils.sh); 
 $(< $(dirname "$0")/main/backup_tooling.sh); 
-$(< $(dirname "$0")/backup_setup.sh);
+$(< $(dirname "$0")/backup_init.sh);
 EOT
 }
 
@@ -237,7 +237,7 @@ $(< $(dirname "$0")/main/build_setup.sh);
 $(< $(dirname "$0")/main/initial_setup.sh); 
 $(< $(dirname "$0")/main/failguard_utils.sh); 
 $(< $(dirname "$0")/main/standby_tooling.sh); 
-$(< $(dirname "$0")/standby_setup.sh);
+$(< $(dirname "$0")/standby_init.sh);
 EOT
 }
 
@@ -251,7 +251,7 @@ STANDBY_NAME=$STANDBY_NAME;
 CLUSTER_NAME=$CLUSTER_NAME; 
 $(< $(dirname "$0")/main/failguard_utils.sh); 
 $(< $(dirname "$0")/main/backup_tooling.sh); 
-$(< $(dirname "$0")/backup_final.sh);
+$(< $(dirname "$0")/backup_setup.sh);
 EOT
 }
 
@@ -267,7 +267,7 @@ STANDBY_IP=$STANDBY_IP;
 REPLICATION_PASSWORD="$REPLICATION_PASSWORD"; 
 $(< $(dirname "$0")/main/failguard_utils.sh); 
 $(< $(dirname "$0")/main/primary_tooling.sh); 
-$(< $(dirname "$0")/primary_final.sh);
+$(< $(dirname "$0")/primary_setup.sh);
 EOT
 }
 
