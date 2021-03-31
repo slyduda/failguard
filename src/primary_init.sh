@@ -29,8 +29,12 @@ install_postgres
 
 echo "Creating $CLUSTER_NAME"
 stop_cluster main
+pg_lsclusters
+sleep 3
 create_cluster $CLUSTER_NAME
+pg_lsclusters
 start_cluster $CLUSTER_NAME
+pg_lsclusters
 setup_postgres $DB_NAME "$POSTGRES_PASSWORD" $CLUSTER_NAME
 
 # Create pgbackrest config
