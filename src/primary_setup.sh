@@ -6,6 +6,6 @@
 send_postgres_public_key $BACKUP_IP
 
 # Configure the Primary Server for Streaming and Standby Backup 
-set_backup_standby_primary_config $BACKUP_NAME $CIPHER_PASSWORD $CLUSTER_NAME 
+set_backup_standby_primary_config $BACKUP_NAME "$CIPHER_PASSWORD" $CLUSTER_NAME 
 set_replica_streaming_primary_config $STANDBY_IP "$REPLICATION_PASSWORD" $CLUSTER_NAME
 # Exit
