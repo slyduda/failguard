@@ -3,15 +3,15 @@
 create_cluster_hosts() 
 {
     # Add hard coded variables to file
-    echo "# ------ FAILGUARD ------- #" >> /etc/cloud/templates/hosts.debian.tmpl
-    echo "# Failguard Manager Host - FGMH" >> /etc/cloud/templates/hosts.debian.tmpl
-    echo "$MANAGER_IP $MANAGER_NAME # Set by Failguard" >> /etc/cloud/templates/hosts.debian.tmpl 
-    echo "# Failguard Main Cluster Host - FGMH" >> /etc/cloud/templates/hosts.debian.tmpl
-    echo "$PRIMARY_IP $PRIMARY_NAME # Set by Failguard" >> /etc/cloud/templates/hosts.debian.tmpl
-    echo "# Failguard Standby Cluster Hosts - FGSH" >> /etc/cloud/templates/hosts.debian.tmpl
-    echo "$STANDBY_IP $STANDBY_NAME # Set by Failguard" >> /etc/cloud/templates/hosts.debian.tmpl
-    echo "# Failguard Backup Host - FGBH" >> /etc/cloud/templates/hosts.debian.tmpl
-    echo "$BACKUP_IP $BACKUP_NAME # Set by Failguard" >> /etc/cloud/templates/hosts.debian.tmpl
+    echo "# ------ FAILGUARD ------- #" >> /etc/hosts
+    echo "# Failguard Manager Host - FGMH" >> /etc/hosts
+    echo "$MANAGER_IP $MANAGER_NAME # Set by Failguard" >> /etc/hosts 
+    echo "# Failguard Main Cluster Host - FGMH" >> /etc/hosts
+    echo "$PRIMARY_IP $PRIMARY_NAME # Set by Failguard" >> /etc/hosts
+    echo "# Failguard Standby Cluster Hosts - FGSH" >> /etc/hosts
+    echo "$STANDBY_IP $STANDBY_NAME # Set by Failguard" >> /etc/hosts
+    echo "# Failguard Backup Host - FGBH" >> /etc/hosts
+    echo "$BACKUP_IP $BACKUP_NAME # Set by Failguard" >> /etc/hosts
     # Iterate over multiple standby's
 }
 
