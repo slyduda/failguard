@@ -80,14 +80,6 @@ send_pgbackrest_public_key()
         ssh -q -A -o "StrictHostKeyChecking no" root@$host_name cat /var/lib/postgresql/.ssh/id_rsa.pub) | \
         sudo -u pgbackrest tee -a /home/pgbackrest/.ssh/authorized_keys
 
-    # Test connection
-    ( sudo -u pgbackrest ssh -q -A -o "StrictHostKeyChecking no" -q postgres@$host_name ) | exit
-    if [ $? -ne 0 ]; then
-        echo "Connection to $host_name failed."
-        exit
-    else
-        echo "Connection to $host_name was successful."
-    fi
 }
 
 
@@ -100,14 +92,6 @@ send_postgres_public_key()
         ssh -q -A -o "StrictHostKeyChecking no" root@$host_name cat /home/pgbackrest/.ssh/id_rsa.pub) | \
         sudo -u postgres tee -a /var/lib/postgresql/.ssh/authorized_keys
 
-    # Test connection
-    ( sudo -u postgres ssh -q -A -o "StrictHostKeyChecking no" -q pgbackrest@$host_name ) | exit
-    if [ $? -ne 0 ]; then
-        echo "Connection to $host_name failed."
-        exit
-    else
-        echo "Connection to $host_name was successful."
-    fi
 }
 
 send_manager_public_key()
@@ -121,15 +105,6 @@ send_manager_public_key()
         HOME_PATH=$(getent passwd $username | cut -d: -f6) | \
         tee -a $host_name/.ssh/authorized_keys
 
-
-    # Test connection
-    ssh -q $username@$host_name exit
-    if [ $? -ne 0 ]; then
-        echo "Connection to $host_name failed."
-        exit
-    else
-        echo "Connection to $host_name was successful."
-    fi
 }
 
 send_public_key()
@@ -140,12 +115,4 @@ send_public_key()
     sender_path=$(getent passwd $sender | cut -d: -f6)
     cat $sender_path/.ssh/id_rsa.pub | ssh root@$host_name 'RECEIVER_PATH=$(getent passwd $sender | cut -d: -f6); cat >> $RECEIVER_PATH/.ssh/authorized_keys;'
 
-    # Test connection
-    sudo -u $sender ssh -q $receiver@$host_name exit
-    if [ $? -ne 0 ]; then
-        echo "Connection to $receiver@$host_name failed."
-        exit
-    else
-        echo "Connection to $receiver@$host_name was successful."
-    fi
 }

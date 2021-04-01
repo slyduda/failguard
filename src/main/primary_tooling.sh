@@ -11,8 +11,8 @@ set_local_repository_primary_config()
 pg1-path=/var/lib/postgresql/12/$cluster_name
 
 [global]
-repo1-cipher-pass=$cipher_password
-repo1-cipher-type=aes-256-cbc
+# repo1-cipher-pass=$cipher_password
+# repo1-cipher-type=aes-256-cbc
 repo1-path=/var/lib/pgbackrest
 repo1-retention-full=2
 
@@ -68,8 +68,8 @@ pg1-path=/var/lib/postgresql/12/$cluster_name
 
 [global]
 repo1-host=$backup_host
-repo1-cipher-pass=$cipher_password
-repo1-cipher-type=aes-256-cbc
+# repo1-cipher-pass=$cipher_password
+# repo1-cipher-type=aes-256-cbc
 repo1-path=/var/lib/pgbackrest
 repo1-retention-full=2
 log-level-file=detail

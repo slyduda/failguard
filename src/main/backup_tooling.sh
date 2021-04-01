@@ -37,11 +37,11 @@ set_backup_standby_backup_config()
     echo "[$cluster_name]
 pg1-host=$primary_name
 pg1-path=/var/lib/postgresql/12/$cluster_name
-pg2-host=$standby_name
-pg2-path=/var/lib/postgresql/12/$cluster_name
+# pg2-host=$standby_name
+# pg2-path=/var/lib/postgresql/12/$cluster_name
 
 [global]
-backup-standby=y
+# backup-standby=y
 process-max=3
 repo1-path=/var/lib/pgbackrest
 repo1-retention-full=2
